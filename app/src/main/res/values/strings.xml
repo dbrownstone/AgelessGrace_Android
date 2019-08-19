@@ -1,0 +1,273 @@
+<resources>
+    <string name="app_name">AgelessGrace</string>
+    <string name="action_settings">Settings</string>
+    <string name="description_title">Description</string>
+    <string name="tools_title">Tools</string>
+    <string name="title_activity_music_selector">MusicSelectorActivity</string>
+    <string name="action_next">Next</string>
+    <string name="tools_tab">Tools</string>
+    <string name="settings_tab">Settings</string>
+    <string name="about_tab">About AG</string>
+    <string name="about_header">Ageless Grace\u00AE in a Nutshell</string>
+    <string name="about_who_subheader">WHO</string>
+    <string name="about_what_subheader">WHAT</string>
+    <string name="about_why_subheader">WHY</string>
+    <string name="about_where_subheader">WHERE</string>
+    <string name="about_how_subheader">HOW</string>
+    <string name="action_refresh_view">Refresh</string>
+    <!--<string name="action_select_music">Select Music</string>-->
+    <string name="action_accept">Accept</string>
+    <string name="select_music_title">Select Music</string>
+    <string name="action_select">Auto Select</string>
+    <string name="action_reselect">Reselect</string>
+    <string name="action_commit">Commit</string>
+    <string name="action_continue">Continue</string>
+    <string name="action_save_settings">Save Settings</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_repeat">Repeat</string>
+    <string name="body_parts_to_move_title">Body Parts to Move</string>
+    <string name="ways_to_move_them_title">Ways to Move Them</string>
+    <string name="select_the_tools">Select Exercise Sessions</string>
+    <string name="alert_title">Alert!</string>
+    <string name="alert_select">Touch \'OK\' to randomly select 7 days worth of 10 minute sessions.</string>
+    <string name="alert_select_more">Touch \'More\' to randomly select the remaining %d more days, or \'All\' to randomly select all 7 days, of 10 minute sessions..</string>
+    <string name="ok">OK</string>
+    <string name="all">All</string>
+    <string name="more">More</string>
+    <string name="exercise_title">Exercise %d</string>
+    <string name="first_day_title">First Day</string>
+    <string name="second_day_title">Second Day</string>
+    <string name="third_day_title">Third Day</string>
+    <string name="fourth_day_title">Fourth Day</string>
+    <string name="fifth_day_title">Fifth Day</string>
+    <string name="sixth_day_title">Sixth Day</string>
+    <string name="seventh_day_title">Seventh Day</string>
+    <string name="seventh_exercise">Exercise 7</string>
+    <string name="no_music_available">No music is currently available!</string>
+    <string name="no_music_available_continuing_anyway">No music exists on thisemulator - continuing on as if the exercise has been completed</string>
+    <string name="formatted_tool_title">Tool #%d: %s</string>
+    <string name="exercise_screen_title">Time To Exercise</string>
+
+    <string name="alert_done_header">You\'re done!</string>
+    <string name="alert_exercise_done">Your exercise requirement for today is complete. You should continue tomorrow!</string>
+    <string name="congrats">Well Done!</string>
+    <string name="congrats_ten_minute_completion">Congratulations on doing your 10 minutes of Ageless Grace Brain. See you %s!</string>
+    <string name="congrats_seven_day_completion"> Wow! You have done your Ageless Grace Brain Health tools every day for a week now!</string>
+    <string name="congrats_twenty_one_days_completed"> You are a champion! Your brain is getting stronger every day -- you did your Ageless Grace tools for 21 days in a row!</string>
+
+    <string name="frequency">Frequency</string>
+    <string name="howAndWhenInstruction">Select when and how you will exercise after you have started</string>
+    <string name="intermittently">intermittently</string>
+    <string name="daily">daily</string>
+    <string name="pause">Pause?</string>
+    <string name="pauseInstruction">Pause between tool exercises</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="start_exercise_session">Start exercise session immediately\nwhen view appears</string>
+    <string name="button_press">upon button press</string>
+    <string name="automatically">automatically</string>
+
+
+    <string name="scrolling_content">   "%s        Body Parts: - %s         Ways To Move: - %s</string>
+    <string name="select_starting_date">Select Starting Date</string>
+
+    <string-array name="tools">
+        <item>Juicy Joints</item>
+        <item>Dive In!</item>
+        <item>Spelling "B" (for Body)</item>
+        <item>Front Row Orchestra</item>
+        <item>Zoo-ology</item>
+        <item>Try Chi</item>
+        <item>Yo Baby!</item>
+        <item>Body Math</item>
+        <item>Gentle Geometry</item>
+        <item>Rockin\' Rockettes</item>
+        <item>Spaghetti Spine</item>
+        <item>Express Yourself!</item>
+        <item>"Power" Tools</item>
+        <item>Saving Face</item>
+        <item>Balancing Act</item>
+        <item>B-R-E-A-T-H-E Out Loud</item>
+        <item>Grab Bag</item>
+        <item>Shake It Up Baby!</item>
+        <item>Team Fit</item>
+        <item>Get Down, Get Up!</item>
+        <item>Dance Party!</item>
+    </string-array>
+
+    <string-array name="primary_benefits">
+        <item>Joint Mobility.
+Also Ligament Flexibility, Circulation</item>
+        <item>Upper Body Strength.
+Also Upper/Lower Body, Psoas, Right/Left Brain Coordination, Hip Flexors</item>
+        <item>All five areas of the brain.
+Also Cognitive Function, Kinesthetic Learning, Range of Motion</item>
+        <item>Multi-skilling.
+Also Spinal Flexibility, Right-Left Brain Coordination, Eye-Hand Coordination</item>
+        <item>Systemic Movement.
+Also Breathing, Fall Prevention, Cognitive Function (Memory/Imagination), Humor</item>
+        <item>Stability in the Ligaments/Joints.
+Also Muscle Control, Eye-Hand Coordination, Breathing and Relaxation</item>
+        <item>Flexibility.
+Also Alignment, Joint Stability, Bone Density</item>
+        <item>Ability to Respond, React and Recover. (The Three R\'s)
+Also Cognitive Function, Agility, Neural Response</item>
+        <item>Neuroplasticity.
+Also Coordination, Neural Response, Multi-skilling, Sense of Humor</item>
+        <item>Hip Flexors and lower body function.
+Also Thigh Strength, Hip Mobility, Ankle and Foot Flexibility, Arch Support, Foot Health</item>
+        <item>Spinal Flexibility: all 26 working parts of the spine.
+(7 Cervical vertebrae, 12 thoracic, 5 lumbar, sacrum and coccyx)</item>
+        <item>Mobility, Strength and Agility in Entire Arm.
+(the Hands, Fingers, Arms, Shoulders, back and chest muscles)</item>
+        <item>Power and Leverage.
+Also Integration, Imagination, Memory/ Recall, Coordination</item>
+        <item>Release of Tension in the Face, Head and Neck.
+Also Relaxation, Muscle Toning, Headache Relief, TMJ/ Jaw Tension, Sense of Humor</item>
+        <item>Balance and Fall Prevention.
+Inner Ear Fluid Stimulation, Neural Pathway Development, Bone Density, Ankle Strength</item>
+        <item>Oxygenation of Cells. (bloodstream, muscles, brain).
+Also Sense of Humor, Stress Relief, Personal Power</item>
+        <item>Dexterity in the Hands, Fingers and Wrists. (ADLs)
+Also Muscle Strength, Arthritis, Joint Flexibility/Mobility, Eye-Hand Coordination</item>
+        <item>Myofascia/Connective Tissue.
+Nervous System Stimulation, Skin and Connective Tissue Health, Agility</item>
+        <item>Muscle Mass and Coordination.
+Overall Physical Strength, Eye-Hand Coordination, Memory/Recall/Strategic Planning</item>
+        <item>The Muscle of the Heart/Cardio Conditioning.
+Also Muscle Strength, Spinal Health and Flexibility, Bone Density, Fall Prevention</item>
+        <item>Emotional Expression,
+Memory/Recall, Cardiovascular Conditioning, Overall Functionality.</item>
+    </string-array>
+
+    <string-array name="full_descriptions">
+        <item>Seated in your chair, move your ankles, knees, hips, wrists, elbows, shoulders, fingers and toes, neck and spine; one by one, two at a time, four at a time (i.e. both ankles and both wrists).
+How many different ways can you move your joints? Experiment with circling them, moving them up and down, in and out, rolling, waving - PLAY with them! Explore! Finally, move them all together! How many of your joints can you use all at once? This massages the sense of humor as well as lubricates the joints!
+Notice that the lower body "mirrors" the upper body: ankles are similar to wrists, knees to elbows and hips to shoulders. These parallel joints can be moved at the same time - giving you twice the benefit!</item>
+        <item>There is no need to get into your swimsuit, drive to a swimming pool, wash your hair or shower afterwards!
+Simply do all the swimming strokes you know—and as many "dives" as you can do in your chair! You can even paddle your feet— they will simply be in front of you instead of behind! Try the breast stroke forward, then upward; swim arm over arm; do the Australian crawl (alternate arms, turning head away from forward arm); side stroke (to left, right); back stoke (elbows bent, relaxed); tread water/dog paddle; "dive" down toward floor and back up; "cannon ball" dive—tuck head and body and roll down toward floor; swan dive — with arms back like wings as you "dive"; and jackknife dive, arms extended down toward feet and toes. Shake all the water off like a puppy would!</item>
+        <item>"Spell" with various body parts for six minutes, e.g., "spell" or "write" in the air the word S-I-X, from largest size block letters to small ones.
+"Draw" in the air a large S with both your arms and hands a few feet high. Draw an S with your elbows (one at a time or together), draw an S with right foot, left foot, with your nose, your pinkie fingers, your knees (one at a time);
+"spell" with your belly button or tail bone. This is great for a laugh and great for the core muscles! Trace the letter on the floor with your toes. Then do the same spelling movements with I and X...or how about the word S-E-X? That works, too! You can spell any word in block letters, or in cursive or script — even in a foreign language.
+This is a great way to learn French, for example! Spell a new French word every day with your body parts. This workout is great for kinesthetic learning (remembering and being taught through the body). Spell your name, your city or state, your grandkids\' names—whatever words come to mind!</item>
+        <item>Pretend to vigorously play various musical instruments as you tap both feet or heels with fun, upbeat music playing in the background for inspiration! Practice as if you are ambidextrous, playing on both right and left sides.
+Play piano back and forth with your fingers moving in full and broken chords; play trumpet up and down, and side to side like a jazz musician; play flute to both sides of your body; play guitar—strumming first with your right hand, then with your left; play drums (taller congas, a drum set, lower bongos, etc.); play cowbells with a drumstick, to each side of your body; play slide trombone, right then left; play accordion; shake maracas; play standup bass on left and right; play xylophone up and down; play saxophone, jazz-style, to left and right sides, up and down in front. Play the organ and be sure to use your feet up and down the pedals. Become the conductor of the orchestra. Just PLAY!</item>
+        <item>Move like various wild animals would, making appropriate sounds. (Sounding helps with core muscles, abdominal support for spine and lower back, lung capacity and breathing).
+Crawl like any fourlegged creature — in the air if seated or standing, or actually on the floor; soar like an eagle, fly like a sparrow, swoop like a seagull; dive like a dolphin; swim like a fish; growl and claw your hands like a lion; stalk or prowl like a tiger; stretch your neck up and around like a giraffe; mimic a monkey; use one arm at a time and swing it like the trunk of an elephant; laugh like a hyena; slither like a boa constrictor or caterpillar. Feel more domestic? Whinny and shake your head like a horse; wag your tail like a dog, bark, scratch fleas, pant or howl; meow and stretch or claw like a cat; use your elbows to flap chicken wings and cluck, or crow like a rooster; wiggle your nose and hold your "paws" up like a bunny. How many more animals can you think of? How do they move? What sounds or motions do they make?</item>
+        <item>Breathe smoothly and steadily as you play with the concept of slow, deliberate, elegant movements. Pay close attention as you watch your moving body parts, similar to Tai Chi.
+    Push with your hands as if you are moving space or moving energy side-to-side; watch your hands with your eyes; shift your weight from side-to-side, rock back-to-front from your hip joints (can still be done seated). Control each movement, making circles and spirals, waves and figure eights, while decelerating all your movements to "slow motion." Play with the space and energy as if it is tangible, like a ball of taffy, sticking from one hand to the other, squishing it palm-to-palm. Hold an imaginary ball in your hands and move it across the sky; swirl the ocean currents with your palms; raise your hands and eyes like the sunrise and lower them to the ground like the sunset. Remember to rotate around the axis of your spine, looking back behind you to left and then right, all the while moving very slowly. Imagine executing any normal activity of daily living in slow motion (i.e., brushing your hair, taking a walk, washing dishes, mowing the lawn).</item>
+        <item>Breathe slowly and use yoga-style movements to align the bones and joints; form V-shapes with the arms; bend over toward the floor; twist your spine gently and look back over each shoulder; balance on one foot (seated, standing behind the chair, down on the floor); do traditional yoga postures if you know them; modify them to accommodate sitting (or standing or holding onto a chair).
+Use the arms and legs to create angles or triangles; bend over the back of a chair and do a "headstand", your head resting on the seat. Stand in front of a chair doing a "headstand"; come up very slowly, one vertebra at a time, eyes looking down to allow the fluid to settle back down onto the floor of the ear canals to eliminate dizziness. Take time and look at the floor as you slowly arise, then look out a little in front of you, before raising your eyes to look straight ahead. Lift and lower your heels to "tap down" on the floor to settle fluid in the ear canals. Pat the tummy at the hara or tan tree — the balance point or center of gravity about two inches below the navel, located inside the center of the body, not on the front or back. Sit and arch your back against the chair; look up at the ceiling, stretch to one side, opposite arm over the head, and then stretch to the other side. Hold the side of the seat or arm of the chair, cross your legs and look back over the right shoulder as you hold the stretch; repeat on the left.</item>
+        <item>Count Your Blessings! Energetically and quickly play with numbers and sequences in a variety of movements. Tap your right hand and right foot 8 times; alternate with the left; then tap 4, then 2; clap without allowing the hands to touch together, stopping a few inches apart, 8 times, 4 times, 2 times; play with odd numbers as well; tap the hand and foot 5 times, clap 3 times—repeat on both sides; tap 3 times, clap 1.
+Criss-cross or "scissor" your arms and hands in single counts. Lift your legs off the floor, alternating right and left as you count. Imagine playing "patty cake" - both hands straight ahead, then crisscross hands or pat the thighs, repeating several times. Say the numbers you are clapping, patting or lifting aloud as you execute them. 1,2,3,4,5,6,7,8. Then 1,2,3,4. Then 1,2,1,2. Count backwards! 4,3,2,1. As quickly as you can, pat right shoulder with left hand, then left shoulder with right hand; then tap right hip with left hand and left hip with right hand. Move your brain and body at the same time! The more you "mess up", the more you challenge the brain!</item>
+        <item>Draw vertical or horizontal lines, circles and triangles in the air with your arms, hands, elbows, nose, each knee, your ring finger, thumbs, toes, or bellybutton. Relax your elbows and knees as you draw. Smile as you do this! Lift one leg at a time and play with linear movements, circular movements, then triangular movements.
+Combine lines and circles to create spirals or waves. Draw a circle with one hand, a line with your foot and a triangle with the other hand (activate your sense of humor!); attempt to draw one of each shape simultaneously with different body parts; do your best to coordinate mind and body! Watch your hands and feet, your legs and arms, as you draw the lines, circles and triangles in order to engage your head and neck. Lift your legs off the floor as you draw the geometric shapes with them, alternating between left and right, to engage the hip joints.</item>
+        <item>Seated, lift your feet off the floor; point and flex each foot out in front of you, pumping the ankles to pump blood to the main arteries, heart and brain. Practice kicks of all kinds—singles; doubles; fans (sweep up, over and to the right or up, over and to the left); the "rockette" kick (lift knee up, tap toes down; kick foot out and tap toes down); make sounds like "Whee!" as you kick.
+Alternate kicks toward the corners of the room. Pretend you are tap dancing. Wiggle the toes as if they are fingers. Use your fingers at the same time to "inspire" your toes to move! Attempt to lift one toe at a time, in sequence; press down onto the floor with the toes; tap toe-heel several times with each foot. Reverse and try heel-toe. Manually move the toes with your hands, one at a time, back, forth, around. Walk barefoot at home as much as possible to stimulate the 7000 nerve endings in each foot. Drop a tissue on the floor, pick it up with your toes and give it to your opposite hand. Repeat several times with each foot. Then use a cloth napkin or hand towel. "Pleat" the tissue, napkin or towel with your toes. Rub the bottom of each foot back and forth with pressure on a tennis ball or "super ball" for a couple minutes. Practice while watching TV!</item>
+        <item>Shape your spine like a piece of al dente spaghetti or a pipe cleaner, bending front, back, side-to-side, rotating, swaying, waving, folding over. (Note: The lower back moves and is moved by the pelvis and tailbone; mid-back and shoulder blades move and are moved by the ribcage and elbows; neck moves and is moved by the head and eyes.)
+</item>
+        <item>Use your fingers, arms and hands to "speak." Knead with the fingers as if you are making biscuit dough; turn palms up and palms down as you knead; wiggle fingers like "gummy worms;" shake water drops off of your fingers; shoot sparks out your finger tips; face palms and push fingers against each other with gentle pressure; press, release and repeat. Use the fingers of one hand to massage the opposite shoulder for a minute; then change hand and shoulder.
+Punch holes in the air. Snap your fingers. Cross/uncross your fingers and make a wish. Do "finger pushups" on the floor, seat or arm of your chair. "Play" up and down a piano keyboard. Wave your arms like a sparrow, a sea gull, or an eagle. Circle your shoulders forward, then back. Point in different directions with your elbows. Shrug your shoulders like a teenager and say "I don\'t know!" "Wasn\'t me!" Shrug slowly, then quickly. Clap your hands behind your back. Make dramatic gestures with your hands and arms like a "drama queen." Wave as if riding in a parade, alternating hands. Wave your arms to get someone\'s attention. Pretend you are a traffic cop, wave forward, stop, start, etc. Relax your jaw, open your palms, and shake your hands, arms, then shoulders.</item>
+        <item>Especially for the handyman and gardener in all of us...ambidextrously (using both left and right sides of the body), act as if you are using tools for carpentry, plumbing, gardening and yard work; use your hands and arms, back and chest as if hammering nails into the wall; then lean down and hammer into the floor; pretend you are operating a jack hammer and vibrate and bounce (engage the legs and feet); turn a screwdriver with your forearms and hands (rotating the spiraling bones of the lower arms); use a hand saw, back and forth on each side of the body; operate a weed-whacker or hedge trimmer; use your hands to prune. Dig with a shovel or spade, using your foot and leg to push down on the spade; alternate sides.
+Turn wrenches with both hands; inward, then outward. Chop wood with an axe. Operate a rotor-tiller (engaging core and legs). Swing a sledge hammer or crowbar. Use a sander in circular motions. Push a lawn mower. Use your imagination!</item>
+        <item>The muscles in the cheeks, neck and forehead are basically the same as the muscles in the upper arm, thighs, abdominals or calves. You can contract and relax them, pump them, strengthen them—and tighten and tone them.
+Stick out your lower lip and attempt to curl it up and touch your nose with it—"try" this over and over! Scrunch up your cheeks like little apples and then relax, repeating this many times until your face tires. Raise and lower your eyebrows as if you are attempting to touch your hairline. Do it slowly, do it quickly, until your facial muscles fatigue. Smile so widely that it goes into your ears; relax and repeat again and again. Wiggle your nose like a bunny. Attempt to wiggle your ears. Stick out your tongue and retract it quickly. It doesn\'t matter if you can do all these moves. It matters that your mind is sending the message to your body to attempt to do it. Make silly and distorted faces as quickly as you can. Laugh out loud using your face, eyes, lips and cheeks as much as possible—fake it until you make it true laughter! If all else fails—look at yourself in the mirror as you practice these movements—that will do it! Laugh heartily, hysterically, enthusiastically throwing back the head.</item>
+        <item>Pay attention to moving the toes and feet; to the center of gravity or balance point of the body (two inches below the navel in the center of the body); and to the fluid in the three ear canals.
+Seated, move your head right to left as quickly as is comfortable; wag the head; circle the head; watch rapid, random moves of your hands. While sitting or holding onto the back of a chair, practice "turning" as quickly as possible to each side. Hold onto the back of a chair and lift one leg like a flamingo, alternate and hold each side for 30 seconds. Stand on one leg and soften the knee, like a cat about to pounce. Shift your weight from one foot to the other, moving more and more slowly, staying longer and longer on each side. Point and look where you are pointing, moving the head as if seeing lots of new and exciting sights! Like a small child, say no and shake your head emphatically. Enthusiastically nod yes to ice cream! Float in space, as if you are filled with helium. Play with being on and off balance, as you sit or stand and hold onto the back of the chair. Sit and wiggle your toes and flex your feet. Push down into the floor with the balls of your feet and your toes. Find the balance point of each foot (at the base of the second toe, between the second and third toe); press down into the point, lifting up with the head at the same time.</item>
+        <item>Breathe normally and naturally, rather than so deeply that you feel lightheaded. Put one hand on your belly and one on your chest or solar plexus; breathe in slowly and sense the belly and lungs filling up with air like a balloon being blown up.
+Breathe out slowly, deeply, and sense the body "deflating" like a balloon losing air. Breathe in through the nose and out through the nose; breathe in through the nose and out through the lips; breathe in through the lips and out through the lips; breathe in through the lips and out through the nose. Repeat the sequence two more times for a full exchange of oxygen to the lungs, bloodstream and brain—an "oxygen cocktail" that might make you a bit giddy! This is a good energy lift in the afternoon — or good to help you relax and sleep at night. Focus on the exhale to regain breath if you feel winded or "out of breath." Imagine blowing into a paper bag. Pant like a puppy. Sing out loud: "Row, Row, Row Your Boat," "Mary Had a Little Lamb," "Happy Birthday." Sounding and use of the breath are excellent for lung capacity and the vascular system. Make sounds — wow, man, pow, pop, ooh, ahhh, yes, no, phooey, hiss, pshaw, any sound you think of; expel your breath so that the body automatically inhales afterwards.</item>
+        <item>Sit in your chair and grab the air with your hands as if you are "snatching" things—apples, stardust, ladybugs, fireflies, pennies from heaven—quickly and with as much agility as you can.
+Remember flying or falling objects could be high in the air, to your right or left, behind your head or neck, under your knees, down close to the floor, all around you in every direction—here, there and everywhere. Grab, grab, grab - and yet hold the inside of the palm relaxed while the fingers close and open with strength, so the "firefly" or "ladybug" can still breathe inside your closed hand! Say "grab" or "gotcha" each time you do the movement!</item>
+        <item>Begin shaking, vibrating, tremoring, shimmying, jack-hammering — slowly, then at a medium speed, then fast.
+Shake and vibrate one at a time with your shoulders, hips, head, tail bone; then with your whole body. Shake your arms, one at a time, both at once. Shake your legs, one at time, both at once. Shake or shimmy by playing "ping pong" from shoulder-to-shoulder, varying the speeds, the way a ping pong game starts out slowly, warms up, and then gets going rapidly back and forth. Shake and vibrate other parts of the body in shimmy style. Shake your entire body as if you are a puppy coming in out of the rain. Can you do this for a full minute? Two minutes? Wow!</item>
+        <item>While seated, pretend to play various sports (alternating both left and right sides of the body). Try bicycling; tennis (forehand, backhand; lob and serve on each side); baseball (pitching, then batting with both hands and arms); throwing a Frisbee; bowling; archery; swinging a golf club; mountain climbing; rock climbing; tug of war; passing a football or kicking a field goal; basketball (shooting hoops with both hands or dribbling,
+Globetrotter style, under the legs, around the back); riflery; weight lifting; kicking a soccer ball (with your foot, knee, head, shoulder, etc.); swimming (practicing all the strokes, breast, dog paddle, Australian crawl, back stroke, side strokes, and various dives); boxing or sparring; horseback riding (posting, legs wide). Go for the gold!</item>
+        <item>While sitting, bend down and try to touch the floor, and come back to a seated position. Then, using the arms of the chair, push up to standing or halfway up. Return to seated position. Repeat this sequence as rapidly as you can.
+Sit, reach down to floor, sit, stand or push up, sit, reach down to floor, sit, stand or push up, etc. Another option is to get all the way down onto the floor and get back up, using the chair for support. If you haven\'t done this in many years (or perhaps since you were a child!), this is one of the best possible exercises you can do to condition all your joints, major and minor muscles, tendons and connective tissue. Practice this near the chair (or a sofa or bed), so you have the reassurance and comfort of knowing you have something to hold onto if you need support. You can put pillows on the floor for comfort and safety. See how many times you can get down and back up in one to two minutes. Lower yourself differently each time, to your right, to your left, facing backward, front, etc.</item>
+        <item>Yes, vigorously dance in your chair, so it works your core muscles! Play music from your youth or childhood.
+Put on music that you like, new music that you\'ve never heard, music you don\'t like (to inspire you to move differently than you typically move!). Play "music roulette" and just put your MP3 player, CD changer or stereo on "random" and dance and move to whatever comes up! Move from top to bottom, from side-to-side. Dance your back as well as your front. Reach up high, reach down low, move all around. Dance flowing, dance linear, dance twisting and spiraling. Feel free to make sounds as you dance in your chair! Wheee! Whoopee! Rock out! Jam! Dance as if no one is watching you and you are alone in your living room!</item>
+    </string-array>
+
+    <string-array name="body_parts_to_move">
+        <item>Ankles and wrists\nKnees and elbows\nHips and shoulders\nFingers and toes\nSpine (neck, between shoulder blades, lower back)</item>
+        <item>Arms and hands\nHead and neck\nShoulders\nCore of body and spine (especially in \'dives\')\nLegs and feet</item>
+        <item>Head, chin or nose (moves neck)\nFingers, hands, elbows or entire arms\nToes, feet and legs (entire leg/hip joints)\nBelly button (moves abdominals) or tail bone (moves hip joints)</item>
+        <item>Arms, hands and fingers\nCore of the body (rib cage, abdominals)\nFeet and ankles\nHead and neck</item>
+        <item>Face, eyes, cheeks and mouth\nSpine (neck, shoulder blades, lower back) and entire back of the body\nFingers, hands, arms and shoulders\nFeet and legs</item>
+        <item>Eyes, head and neck (spine)\nHands, palms, arms and shoulders\nHip joints, knees and ankles</item>
+        <item>Eyes, head, neck and spine\nShoulders, arms and palms\nHip joints, knees and ankles</item>
+        <item>Hands and feet (which move shoulders and hip joints)\nAbdominals (as legs criss-cross or lift off the floor) and core muscles,\nArms and legs\nHead</item>
+        <item>Arms and legs (shoulders and hip joints)\nAbdominals and core muscles\nHead and neck; eyes watch hands and feet draw lines, circles and triangles</item>
+        <item>Toes, feet, ankles, knees and legs (which move hip joints)\nAbdominals (as legs lift off the floor) and other core muscles</item>
+        <item>Spine (head, neck, rib cage, shoulder blades, pelvis, tailbone and lower back\nAbdominals (as legs lift off the floor), other core muscles as you engage the full length of your spine</item>
+        <item>Fingers, hands, arms and shoulders\nBack of the body and front of the chest\nFacial muscles</item>
+        <item>Hands, arms, shoulders and back\nCore, waist and abdominals\nLegs and feet\nHead and eyes watching hands</item>
+        <item>Facial muscles, chin , cheeks, forehead, neck and jawbone\nEyebrows, eyelids and lashes\nNose, lips, tongue and ears</item>
+        <item>Feet and toes (press down between the second and third toes)\nKnees (softening to raise/lower center of gravity or balance point, holding onto chair)\nHead and eyes watching moving hands</item>
+        <item>Lungs, chest, belly, abdominals and voice</item>
+        <item>Fingers, hands and arms\nHead, eyes and neck as you watch what your hands are doing\nSpine (neck, shoulder blades, lower back</item>
+        <item>Arms and legs\nShoulders, rib cage and chest muscles\nBack of the body\nJawbone and head (Relax! Open the mouth slightly and part the teeth.)\nOpen hands (rather than clenched)</item>
+        <item>Upper body, fingers and arms, hands, shoulders and back\nCore and abdominals\nLower body, legs and feet\nEyes, head and neck</item>
+        <item>Use every body part you can\nSpine (neck, shoulder blades, lower back)\nThighs and calves</item>
+        <item>All your joints\nAll your muscles\nAll your bones\nAll your body parts, including your facial muscles\nEverything you can</item>
+    </string-array>
+
+    <string-array name="ways_to_move_them">
+        <item>Circling\nUp and down\nIn and out\nRolling or waving\nShaking, pulsing, vibrating</item>
+        <item>Breast stroke, Australian crawl, side stroke, back stroke\nDog paddling or treading water\nDiving downward toward floor\nShaking</item>
+        <item>Tracing and re-tracing block letters of the alphabet in the air\nWriting in the air with cursive or script\nWriting foreign words\nMaking large letters with some body parts, small letters with others
+\nDrawing letters on the floor with the toes, in the air with the fingers</item>
+        <item>Pretending to play various musical instruments\nSide-by-side, \'con brio\' (with vigor!)\nUp and down, high and low\nRotating and turning\nUsing feet and legs to tap and keep time</item>
+        <item>Imitating various wild or domestic animal movements and sounds\nSensuously, elegantly, gracefully, powerfully, boldly, timidly\nNoisily, expressively, theatrically, stealthily, crashing, ferociously
+\nAgressively, swiftly, playfully</item>
+        <item>As if you are practicing tai chi\nSlowly, carefully, consciously, deliberately, eyes following each detail of your movement\nResisting the air as you "push" your hands and arms through it\nRotating around your spinal axis</item>
+        <item>As if you are practicing yoga postures\nTurn head and neck and look in the direction you turn
+\nCreate lines and angles with arms and legs\nRotate spine and hips; align knees and toes\nStretch, extend, bend and flex your body</item>
+        <item>Tap arms, hands, feet, counting numbers aloud adding up to 8 (4X on right, 4X on left, 2X on each side, 5X and clap 3X, etc.)
+\nFast, alternating side-to-side\nHands up, up, down, down or in, out\nCriss-cross or \'scissor\' movements</item>
+        <item>Draw short, quick, choppy lines, circles, triangles; or use long, elegant and slow movements\nSmall circles like quarters or saucers; large circles like Frisbees or hula hoops\nVertically and horizontally, both extremities at once; alternating right and left arm or leg
+\nUse different body parts to draw a circle, triangle and line at the same time</item>
+        <item>Like you are tap dancing\nSharp kicks vs jazzy; lifting vs kicking; pointed toes vs. flexed ankle\nKick to corners to engage psoas muscle (groin)\nLift leg up, set down, kick out, set down; alternate sides</item>
+        <item>Wave and flow like your spine is \'al dente\' spaghetti\nSlither, wiggle, squirm, writhe like a snake; wave like a silk cord, seaweed or scarf\nRotate, bend, fold, shift, turn, spiral each side; pulse forward and back</item>
+        <item>Acting as if you are a traffic cop, beauty queen, artist, conductor, boxer, etc.\nWith drama/emotion; with power/force; with grace/elegance\nFast/slowly; in polarity</item>
+        <item>As if you are using various tools for carpentry, building , gardening\nVibrating or shaking\nPrecise and linear\nCircular, rotating or spiraling\nSide-to-side, swinging motions\nLifting and pushing down</item>
+        <item>Making crazy faces\nGyrate, wiggle, distort\nRaise and lower, scrunch and relax, open and close\nExaggerate</item>
+        <item>Head swiftly side-to-side to move fluid in ear canals (seated)\nWith playful experimentation: seated, standing, holding onto chair, bending down\nOne-legged: shifting weight: "floating" weightlessly</item>
+        <item>Breathe long and slow:staccato: smoothly: pant\n"Pumping" abdominal muscles as you sound or breathe\nSoftly, loudly, making sounds of all kinds\nSinging silly songs\nUsing gibberish or childlike words and phrases</item>
+        <item>Swiftly grabbing, catching or snatching imaginary objects\nIn the spirit of playful, childlike wonder\nQuickly, sharply, with great speed\nHigh/low, side-to-side, front/back\nReaching under legs, sides and front of the chair</item>
+        <item>Shake, vibrate, shimmy, tremor: individual body parts or all of them\nWith abandon and lack of self-consciousness\nRelaxing the muscles and ligaments: release and let go!\nOpening the fingers and hands</item>
+        <item>Pretending to play various sports with vigor\nUsing the full body\nRemembering how it felt to make these athletic moves in the past\nVisualizing the way you have seen athletes on television do the moves</item>
+        <item>Seated, reach down to the floor, come back to seated: reach or stand up,\nback to seated:repeat sequence quickly\nLower and raise yourself from your chair, differently each time\nRotate, twist and stretch the spine\nIf possible, get onto the floor and back up as many times as you can</item>
+        <item>Dancing in your chair\nIn the spirit of playful experimentation, using your chair for support\nWith youthful vigor, vitality and abandonment\nAs if you were a teenager again (unless you still are; then dance as if you are a child!)</item>
+    </string-array>
+
+    <string-array name="about_agelessgrace">
+        <item>The Ageless Grace\u00AE program consists of 21 Simple Tools for Lifelong Comfort and Ease and can be done by almost anyone of any age or ability. All the
+exercises are designed to be practiced in a chair, and consist of movement sequences that are natural and come with ease. The program has been
+developed by Denise Medved, who has been featured on national television, and in publications such
+as "American Fitness". She has taught people of all ages, body types and abilities, and is passionate about
+helping those with restricted movement, learn that they can move again with comfort and ease. Denise is an International Nia\u2122 Education Trainer and 1st Degree Black Belt Nia\u2122
+instructor; an AFAA Certified Personal Trainer, feng shui consultant, and
+international presenter and speaker.</item>
+        <item>Ageless Grace\u00AE was designed so that almost ANYONE of any age, ability, body type, size, or with any physical challenge, can participate and
+        benefit from these 21 Simple Tools for Lifelong Comfort and Ease.\nAthletic-types, people in wheelchairs, 30-somethings, and even kids, can see cumulative benefits from the daily practice of these simple exercises, and have FUN at the same time!</item>
+        <item>The 21 Simple Tools for Lifelong Comfort and Ease are easy to remember and consist of "organic" movements that come naturally. They not only stimulate the body, the initiate a mind-body link that can positively affect attitude and increase cognitive function. Choose only two or three Tools per day and practice each one for three to five minutes moving in time to your favorite upbeat music, for a total of 10 minutes daily.</item>
+        <item>We have one body and it is our mission to take care of it, nurture it and keep it in good working condition. This allows us to have lifelong comfort and ease, functionmore efficiently, improve and maintain a positive attitude and outlook and live our lives to the fullest.</item>
+        <item>The program is designed to be practiced in a chair. However, all 21 Tools can be done standing on the floor, on a bed or behind or near a chair for support. Almost ANYONE -- healthy, young adults, active aging adults, those in wheelchairs or on walkers, those who use canes or have balance issues those who are obese -- can benefit from getting into the habit of practicing this program for 10 minutes every day. It can be done wherever you have a sturdy and stable chair that ideally has arms and enough arm room around you to move in a full range of motion .. your bedroom, your living room, your den, outside on the deck or in the yard.</item>
+        <item>I challenge you to practice two or three of the Ageless Grace\u00AE Tools to upbeat music for 10 minutes each day for 21 days in a row in order to create a new habit of daily movement. The benefits are cumulative -- if you like the way you feel after 21 days, continue the habit you\'ve just begun for the rest of your life!</item>
+    </string-array>
+
+    <string-array name="about_legal">
+        <item>Ageless Grace has built the AgelessGrace app as a commercial app. This SERVICE is provided by Ageless Grace and is intended for use as is.\n\nThis page is used to inform users regarding our policies with the collection, use, and disclosure of Personal Information if anyone has decided to use our Service.\n\nIf you choose to use our Service, then you agree to the collection and use of information in relation with this policy. The Personal Information that we collect, are used for providing and improving the Service. We will not use or share your information with anyone except as described in this Privacy Policy.\n\nThe terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which is accessible at AgelessGrace, unless otherwise defined in this Privacy Policy.</item>
+        <item>For a better experience while using our Service, we may require you to provide us with certain personally identifiable information, including but not limited to location.\n\nThe information that we request is retained on your device and is not collected by us in any way.</item>
+        <item>We want to inform you that whenever you use our Service, in case of an error in the app we collect data and information (through third party products) on your phone called Log Data. This Log Data may include information such as your devices’s Internet Protocol (“IP”) address, device name, operating system version, configuration of the app when utilising our Service, the time and date of your use of the Service, and other statistics.</item>
+        <item>Cookies are files with a small amount of data that is commonly used an anonymous unique identifier. This Services does not uses these “cookies” explicitly. However, the app may use third party code and libraries that use “cookies” to collect information and to improve their services. You have the option to either accept or refuse these cookies, and know when a cookie is being sent this Service.</item>
+        <item>We may employ third-party companies and individuals for the following reasons:\n\n\t1: To facilitate our Service;\n\t2: To provide the Service on our behalf;\n\t3: To assist us in analyzing how our Service is used.\n\n
+We want to inform users of this Service, that these third parties have access to your Personal Information in order to perform the tasks assigned to them on our behalf. However, they are obligated not to disclose or use the information for any other purpose.</item>
+        <item>We value your trust in providing us your Personal Information - therefore we are striving to use commercially-acceptable means of protecting it. But remember that no method of transmission over the internet, or method of electronic storage, is 100% secure and reliable, and we cannot guarantee its absolute security.</item>
+        <item>This Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by us. Therefore, I strongly advise you to review the Privacy Policy of these websites. We have no control over, and assume no responsibility for the content, privacy policies, or practices of any third-party sites or services.</item>
+        <item>This Service does not address anyone under the age of 13. We do not knowingly collect personal, identifiable information from children under 13. In the case we discover that a child under 13 has provided us with personal information, we immediately delete this from our servers. If you are a parent or guardian and you are aware that your child has provided us with personal information, please contact us so that we will be able to do necessary actions.</item>
+        <item>We may update our Privacy Policy from time to time. Thus, you are advised to review this page periodically for any changes. We will notify you of any changes by posting the new Privacy Policy on this page. These changes are effective immediately, after they are posted on this page.</item>
+        <item>If you have any questions or suggestions about our Privacy Policy, do not hesitate to contact us by email at: davidbrownstone@me.com"</item>
+    </string-array>
+</resources>

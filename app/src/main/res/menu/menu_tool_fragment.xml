@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_select"
+        android:title="@string/action_select"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_reselect"
+        android:title="@string/action_reselect"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_repeat"
+        android:title="@string/action_repeat"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_continue"
+        android:title="@string/action_continue"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_commit"
+        android:title="@string/action_commit"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_refresh_view"
+        android:icon="@drawable/refresh"
+        android:title="@string/action_refresh_view"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_select_music"
+        android:icon="@drawable/select_music"
+        android:title="@string/select_music_title"
+        app:showAsAction="ifRoom" />
+</menu>
