@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,10 +49,13 @@ public class ToolFragment extends Fragment {
     String[] allTools;
     Integer[] toolsNo = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
     ArrayList<String>  selectedToolSets;
-    ArrayList<Integer> selectedTools;
+    String  selectedSets;
+    ArrayList<String> selectedTools;
     ArrayList<String> completedToolSets;
+    String completedSets;
     ArrayList<Integer> lastCompletedToolIds;
     public String lastCompletedToolSet;
+    public String lastCompletedSet;
     public ArrayList<Integer> completedToolIds;
     Integer[][] selectedToolsArray;
     ArrayList<String> currentSelection;
@@ -99,7 +103,7 @@ public class ToolFragment extends Fragment {
             String[] numbersStr = toolSet.split(",");
             ArrayList<Integer> arr = new ArrayList<Integer>();
             for(int j=0; j<numbersStr.length; j++) {
-                selectedTools.add(i,Integer.parseInt(numbersStr[j]));
+                selectedTools.add(i,String.valueOf(numbersStr[j]));
             }
         }
 
@@ -126,7 +130,7 @@ public class ToolFragment extends Fragment {
             }
             selectTheAppropriateTitle(whichDay);
         } else {
-            if (selectedToolSets.size() > 0 && completedToolSets != null) {
+            if (selectedToolSets.size() > 0 && (completedToolSets != null && completedToolSets.size() > 0)) {
                 nextToolSet = selectedToolSets.get(completedToolSets.size() - 1);
                 setUpToolsToBeDisplayed(nextToolSet);
                 whichDay = completedToolSets.size();
@@ -210,19 +214,12 @@ public class ToolFragment extends Fragment {
     void getSharedPreferences() {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         String todaysDate = formatter.format(new Date());
-        lastCompletedToolIds = SharedPref.getLastCompletedToolIds();
         String completedDate = SharedPref.read("Date_of_last_exercise", "");
         lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
         completedToolIds = SharedPref.getCompletedToolIds();
         setupCompletedSets();
-        selectedToolSets = SharedPref.getAllSelectedToolSets();
-
-        for (int i = 0; i < completedToolSets.size(); i++) {
-            String set = completedToolSets.get(i);
-            if (!selectedToolSets.contains(set)) {
-                selectedToolSets.add(set);
-            }
-        }
+//        selectedToolSets = SharedPref.getAllSelectedToolSets();
+        selectedToolSets = SharedPref.getAllSelectedSets();
 
         pauseBetweenTools = !SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
         exercise_automatically = SharedPref.read(Constants.START_EXERCISE_IMMEDIATELY, false);
@@ -243,7 +240,9 @@ public class ToolFragment extends Fragment {
             if (completedToolSets == null) {
                 completedToolSets = new ArrayList<>();
             }
-            completedToolSets.add(aSet);
+            if (!completedToolSets.contains(aSet)) {
+                completedToolSets.add(aSet);
+            }
             aSet = "";
         }
     }
@@ -461,7 +460,6 @@ public class ToolFragment extends Fragment {
         return toolIds;
     }
 
-
     void addToCurrentlySelectedTools(String toolName, Integer whichOne) {
         currentSelection.add(toolName);
         currentSelectionIds.add(whichOne);
@@ -567,7 +565,7 @@ public class ToolFragment extends Fragment {
         ArrayList<Integer> randomNumbers = new ArrayList<>();
         Integer randCnt = 21;
         if (all) {
-            selectedTools = new ArrayList<Integer>();
+            selectedTools = new ArrayList<>();
             selectedToolSets = new ArrayList<>();
             completedToolSets = new ArrayList<>();
             SharedPref.remove(Constants.SELECTED_TOOL_IDS);
@@ -578,15 +576,19 @@ public class ToolFragment extends Fragment {
                     String toolSet = selectedToolSets.get(i);
                     String[] numbersStr = toolSet.split(",");
                     for(int j=0; j<numbersStr.length; j++) {
-                        selectedTools.add(Integer.parseInt(numbersStr[j]));
-//                        randomNumbers.add(Integer.parseInt(numbersStr[j]));
+                        selectedTools.add(String.valueOf(numbersStr[j]));
                     }
                 }
             }
         }
+        // create an integerized version of selected tools
+        ArrayList<Integer>selectedToolsInt = new ArrayList<>();
+        for (int j = 0; j < selectedTools.size(); j++) {
+            selectedToolsInt.add(Integer.parseInt(selectedTools.get(j)));
+        }
         for (int i = 0; i <= 20; i++) {
             if (!all) {
-                if(!selectedTools.contains(i)) {
+                if(!selectedToolsInt.contains(i)) {
                     randomNumbers.add(i);
                 }
             } else {
@@ -596,21 +598,21 @@ public class ToolFragment extends Fragment {
 
         randCnt = randomNumbers.size();
         Collections.shuffle(randomNumbers);
-        for (int j = 0; j < randCnt; j += 3) {
-            String toolSet =  Integer.toString(randomNumbers.get(j)) + "," +
-                    Integer.toString(randomNumbers.get(j + 1)) + "," +
-                    Integer.toString(randomNumbers.get(j + 2));
-            selectedToolSets.add(toolSet);
-            if (!all) {
-                selectedTools.add(randomNumbers.get(j));
-                selectedTools.add(randomNumbers.get(j + 1));
-                selectedTools.add(randomNumbers.get(j + 2));
-            }
+
+        for (int i = 0; i < randCnt; i++) {
+            selectedTools.add(Integer.toString(randomNumbers.get(i)));
         }
-        if (all) {
-            selectedTools = randomNumbers;
+        selectedToolSets = new ArrayList<>();
+        for (int j = 0; j < 21; j = j + 3) {
+            selectedToolSets.add(String.valueOf(selectedTools.get(j)) + "," +
+                    String.valueOf(selectedTools.get(j + 1)) + "," +
+                    String.valueOf(selectedTools.get(j + 2)));
         }
+
+        String sets = TextUtils.join(" ", selectedToolSets);
         SharedPref.saveToSelectedToolIds(Constants.SELECTED_TOOL_IDS,selectedTools);
+        SharedPref.addSelectedToolSets(sets);
+
         prepareDisplay();
     }
 
@@ -623,12 +625,12 @@ public class ToolFragment extends Fragment {
             selectTheAppropriateTitle(completedToolSets.size() + 1);
             nextToolSet = selectedToolSets.get(completedToolSets.size());
         }
-        Set<String> sets = new LinkedHashSet<>(selectedToolSets);
+        String sets = TextUtils.join(" ", selectedToolSets);
         SharedPref.addSelectedToolSets(sets);
-        ArrayList<Integer> selectedToolNos = SharedPref.getSelectedToolIds();
+        ArrayList<String> selectedToolNos = SharedPref.getSelectedToolIds();
         int[] numbers = new int[selectedToolNos.size()];
         for (int i = 0; i < selectedToolNos.size(); i++) {
-            toolsNo[i] = selectedToolNos.get(i);
+            toolsNo[i] = Integer.parseInt(selectedToolNos.get(i));
         }
         prepareToolForDisplay(nextToolSet);
         itemAdapter.updateData(tools, toolsNo);

@@ -170,28 +170,39 @@ public class MusicSelectorActivity extends AppCompatActivity {
                 });
             } else {
                 final Boolean isEmulator = isEmulator();
-                AlertDialog alertDialog = new AlertDialog.Builder(MusicSelectorActivity.this).create();
-                alertDialog.setTitle(R.string.alert_title);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.alert_title);
                 String message = getString(R.string.no_music_available);
                 if (isEmulator) {
                     message = getString(R.string.no_music_available_continuing_anyway);
                 }
 
-                alertDialog.setMessage(message);
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    if (isEmulator) {
-                                        returnToMainActivity();
-                                    } else {
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        setResult(RESULT_CANCELED, intent);
-                                        startActivity(intent);
-                                    }
+                builder.setMessage(message);
+                // add the buttons
+                builder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                if (isEmulator) {
+                                    returnToMainActivity();
+                                } else {
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    setResult(RESULT_CANCELED, intent);
+                                    startActivity(intent);
                                 }
-                            });
-                alertDialog.show();
+                            }
+                        });
+                builder.setNegativeButton(R.string.action_cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
 
             }
         } catch (Exception e) {
@@ -205,21 +216,23 @@ public class MusicSelectorActivity extends AppCompatActivity {
         if ((DateManager.getStartToEndDates()).size() == 0) {
             DateManager.setStartToEndDates();
         }
+
+        ArrayList<String> toolIds = new ArrayList<String>(3);
+        toolIds.add(String.valueOf(tool1Index));
+        toolIds.add(String.valueOf(tool2Index));
+        toolIds.add(String.valueOf(tool3Index));
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("selection_type", toolSelectionType);
         intent.putExtra("from_exercise", true);
         intent.putExtra("repeating", repeating);
-        ArrayList<Integer> toolIds = new ArrayList<Integer>(3);
-        Set<String> theTools = new LinkedHashSet<>(3);
-        toolIds.add(tool1Index);
-        toolIds.add(tool2Index);
-        toolIds.add(tool3Index);
-        SharedPref.saveLastCompletedToolIds(toolIds);
+        intent.putStringArrayListExtra("tool_id_nos", toolIds);
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         String todaysDate = formatter.format(new Date());
         SharedPref.write(Constants.LAST_EXERCISE_DATE, todaysDate);
-        intent.putIntegerArrayListExtra("tool_ids",toolIds);
+        intent.putStringArrayListExtra("tool_ids",toolIds);
         setResult(Activity.RESULT_OK, intent);
         startActivity(intent);
     }

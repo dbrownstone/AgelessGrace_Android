@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class ItemAdapter extends BaseAdapter {
     Integer[] adapterToolNos = new Integer[3];
     ArrayList<Integer> completedToolIds = SharedPref.getCompletedToolIds();
     ArrayList<String> selectedTools = new ArrayList<String>();
-    List<Integer> selectedToolNos = new ArrayList<Integer>();
+    ArrayList<String> selectedToolNos = new ArrayList<>();
     ArrayList<String> selectedToolSets;
 //    String[] selectedToolSets;
 //    Set<String> toolSet = new HashSet<String>();
@@ -42,12 +43,17 @@ public class ItemAdapter extends BaseAdapter {
 
 
     public ItemAdapter(ToolFragment context, String[] i, Integer[] ids, String[] d, Boolean reset) {
-        resetState = reset;
-        if (resetState == false) {
-            createSelectedToolsArrayFromPreferences();
-        } else {
-            completedToolIds = new ArrayList<>();
+        completedToolIds = context.completedToolIds;
+        selectedToolSets = context.selectedToolSets;
+        selectedToolNos = new ArrayList<>();
+        for (int k = 0; k < selectedToolSets.size(); k++) {
+            String selectedToolSet = selectedToolSets.get(k);
+            String[] idsStr = selectedToolSet.split(",");
+            for (int j = 0; j<3; j++) {
+                selectedToolNos.add(idsStr[j]);
+            }
         }
+
         int l = 0;
         adapterTools = i;
         Integer j = 0;
@@ -92,17 +98,17 @@ public class ItemAdapter extends BaseAdapter {
                 context.goToDescriptionView(adapterTools, adapterToolNos, index);
             }});
 
-        if (adapterTools.length > 3) {
-            List<Integer> completedToolIds = context.completedToolIds;
-            if ((completedToolIds != null && completedToolIds.size() > 0 && completedToolIds.size() < 7) && selectedToolNos.size() == completedToolIds.size()) {
-                for (int i = 0; i < completedToolIds.size(); i++) {
-                    if (!selectedToolNos.contains(completedToolIds.get(i))) {
-                        selectedToolNos.add(completedToolIds.get(i) - 1);
-                    }
-                }
-            }
-
-        }
+//        if (adapterTools.length > 3) {
+//            List<Integer> completedToolIds = context.completedToolIds;
+//            if ((completedToolIds != null && completedToolIds.size() > 0 && completedToolIds.size() < 7) && selectedToolNos.size() == completedToolIds.size()) {
+//                for (int i = 0; i < completedToolIds.size(); i++) {
+//                    if (!selectedToolNos.contains(completedToolIds.get(i))) {
+//                        selectedToolNos.add(String.valueOf(completedToolIds.get(i) - 1));
+//                    }
+//                }
+//            }
+//
+//        }
         int i = position;
         int pos = new ArrayList<String>(Arrays.asList(context.allTools)).indexOf(adapterTools[position]);
         String name = String.format("Tool #%d: %s", pos + 1, adapterTools[position]);
@@ -112,9 +118,9 @@ public class ItemAdapter extends BaseAdapter {
         nameTextView.setText(name);
         descriptionTextView.setText(desc);
 
-        if (selectedToolNos == null) {
-            selectedToolNos = new ArrayList<Integer>();
-        }
+//        if (selectedToolNos == null) {
+//            selectedToolNos = new ArrayList<>();
+//        }
         if (adapterTools.length > 3) {
             selectButton.setVisibility(View.VISIBLE);
             if ((completedToolIds != null && completedToolIds.size() > 0 ) || (selectedToolNos != null && selectedToolNos.size()  > 0)) {
@@ -151,7 +157,7 @@ public class ItemAdapter extends BaseAdapter {
                     } else {
                         //add this selection
                         v.setBackgroundResource(R.mipmap.selected);
-                        selectedToolNos.add(toolNo);
+                        selectedToolNos.add(String.valueOf(toolNo));
                         toolCount++;
                         context.showSelectButtonOnly();
                     }
@@ -177,7 +183,7 @@ public class ItemAdapter extends BaseAdapter {
                         }
                         context.selectedToolSets = selectedToolSets;
                         context.showCommitButton();
-                        Set<String> sets = new LinkedHashSet<>(selectedToolSets);
+                        String sets = TextUtils.join(" ", selectedToolSets);
                         SharedPref.addSelectedToolSets(sets);
                     }
                 }
@@ -189,24 +195,24 @@ public class ItemAdapter extends BaseAdapter {
     }
 
     /* create a list of tools that have already been selected */
-    void createSelectedToolsArrayFromPreferences() {
-        selectedToolSets = SharedPref.getAllSelectedToolSets();
-        selectedToolNos = new ArrayList<>(selectedToolSets.size() * 3);
-        for (int i = 0; i < selectedToolSets.size(); i++) {
-            String toolSet = selectedToolSets.get(i);
-            String[] numbersStr = toolSet.split(",");
-            for(int j=0; j<numbersStr.length; j++) {
-                selectedToolNos.add(Integer.parseInt(numbersStr[j]));
-            }
-        }
-    }
-
-    void getSelectedToolNos(ToolFragment context) {
-        for (String aTool : selectedTools) {
-            int pos = new ArrayList<String>(Arrays.asList(context.allTools)).indexOf(aTool);
-            selectedToolNos.add(pos);
-        }
-    }
+//    void createSelectedToolsArrayFromPreferences() {
+//        selectedToolSets = SharedPref.getAllSelectedToolSets();
+//        selectedToolNos = new ArrayList<>(selectedToolSets.size() * 3);
+//        for (int i = 0; i < selectedToolSets.size(); i++) {
+//            String toolSet = selectedToolSets.get(i);
+//            String[] numbersStr = toolSet.split(",");
+//            for(int j=0; j<numbersStr.length; j++) {
+//                selectedToolNos.add(String.valueOf(numbersStr[j]));
+//            }
+//        }
+//    }
+//
+//    void getSelectedToolNos(ToolFragment context) {
+//        for (String aTool : selectedTools) {
+//            int pos = new ArrayList<String>(Arrays.asList(context.allTools)).indexOf(aTool);
+//            selectedToolNos.add(String.valueOf(pos));
+//        }
+//    }
 
     public void updateData(String[] tools, Integer[] toolNos) {
         adapterToolNos = toolNos;

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Integer[] toolsNo = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21};
     String[] tools;
 
-    public ArrayList<Integer> completedToolsArray;
+    public ArrayList<Integer> completedToolsArray = new ArrayList<>();
     String[] descriptions;
 
     public Toolbar toolbar;
@@ -121,8 +121,17 @@ public class MainActivity extends AppCompatActivity {
                 if (!bundle.getBoolean("repeating")) {
 //                    addToCompletedTools();
                     toolsFragment.repeating = false;
+                } else {
+                    toolsFragment.repeating = true;
                 }
-                ArrayList<Integer> toolIds = bundle.getIntegerArrayList("tool_ids");
+                ArrayList<String> toolIds = bundle.getStringArrayList("tool_ids");
+                SharedPref.saveToSelectedToolIds(Constants.SELECTED_TOOL_IDS, toolIds);
+                if (!completedToolsArray.contains(Integer.parseInt(toolIds.get(0)))) {
+                    completedToolsArray.add(Integer.parseInt(toolIds.get(0)));
+                    completedToolsArray.add(Integer.parseInt(toolIds.get(1)));
+                    completedToolsArray.add(Integer.parseInt(toolIds.get(2)));
+                }
+                SharedPref.saveToCompletedToolIds(Constants.COMPLETED_TOOL_IDS,completedToolsArray);
                 toolSelectionType = bundle.getString("selection_type");
                 toolsFragment.selectedToolSets = SharedPref.getAllSelectedToolSets();
                 if (toolsFragment.selectedToolSets.size() < 7) {

@@ -169,19 +169,23 @@ public class ExerciseActivity extends AppCompatActivity {
         if ((DateManager.getStartToEndDates()).size() == 0) {
             DateManager.setStartToEndDates();
         }
+
+        ArrayList<String> toolIds = new ArrayList<String>(3);
+        toolIds.add(String.valueOf(tool1Index));
+        toolIds.add(String.valueOf(tool2Index));
+        toolIds.add(String.valueOf(tool3Index));
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("selection_type", toolSelectionType);
         intent.putExtra("from_exercise", true);
-        ArrayList<Integer> toolIds = new ArrayList<Integer>(3);
-        toolIds.add(tool1Index);
-        toolIds.add(tool2Index);
-        toolIds.add(tool3Index);
-        SharedPref.saveToCompletedToolIds(Constants.LAST_COMPLETED_TOOL_IDS, toolIds);
+//        intent.putExtra("repeating", repeating);
+        intent.putStringArrayListExtra("tool_id_nos", toolIds);
+
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         String todaysDate = formatter.format(new Date());
         SharedPref.write(Constants.LAST_EXERCISE_DATE, todaysDate);
-        intent.putIntegerArrayListExtra("tool_ids",toolIds);
+        intent.putStringArrayListExtra("tool_ids",toolIds);
         setResult(Activity.RESULT_OK, intent);
         startActivity(intent);
     }

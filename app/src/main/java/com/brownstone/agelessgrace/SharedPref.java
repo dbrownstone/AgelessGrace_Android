@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.util.ArraySet;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -146,6 +147,8 @@ public class SharedPref {
             currentValue = new ArrayList<Integer>();
         }
         currentValue.addAll(value);
+
+
         StringBuilder sb = new StringBuilder();
         String delim = "";
         for (int i = 0; i < currentValue.size(); i++) {
@@ -160,58 +163,77 @@ public class SharedPref {
 
     // read/write selected tool sets
 
-    public static void addSelectedToolSets(Set<String> set) {
-        SharedPreferences.Editor prefsEditor = mSharedPref.edit();
-        prefsEditor.putStringSet(Constants.SELECTED_TOOL_SETS, set);
-        prefsEditor.commit();
+    public static void addSelectedToolSets(String set) {
+        write(Constants.SELECTED_TOOL_SETS, set);
     }
 
     public static ArrayList<String> getAllSelectedToolSets() {
-        Set<String> set = new LinkedHashSet<String>();
-        ArrayList<Integer> selectedToolIds = getSelectedToolIds();
+        String set = read(Constants.SELECTED_TOOL_SETS,"");
+        String[] setStr = set.split(" ");
         ArrayList<String> result = new ArrayList<>();
-        ArrayList<String> thisSet = new ArrayList<String>();
-        if (selectedToolIds != null) {
-            for (int i = 0; i < selectedToolIds.size(); i += 3) {
-                Integer id0 = selectedToolIds.get(i);
-                Integer id1 = selectedToolIds.get(i + 1);
-                Integer id2 = selectedToolIds.get(i + 2);
-                thisSet.add(String.valueOf(id0) + "," + String.valueOf(id1) + "," + String.valueOf(id2));
-            }
-            result = thisSet;
+        for(int i=0; i<setStr.length; i++) {
+            result.add(i,setStr[i]);
         }
         return result;
     }
 
-    public static ArrayList<Integer> getSelectedToolIds() {
+    public static ArrayList<String> getSelectedToolIds() {
         String ids = read(Constants.SELECTED_TOOL_IDS,"");
         if (ids == "") {
-            return null;
+            return new ArrayList<String>();
         }
         String[] idsStr = ids.split(",");
-        ArrayList<Integer> arr = new ArrayList<Integer>();
+        ArrayList<String> arr = new ArrayList<>();
         for(int i=0; i<idsStr.length; i++) {
-            arr.add(i,Integer.parseInt(idsStr[i]));
+            arr.add(i,idsStr[i]);
         }
         return arr;
     }
 
-    public static void saveToSelectedToolIds(String key, ArrayList<Integer> value) {
+    public static void saveToSelectedToolIds(String key, ArrayList<String> value) {
         SharedPreferences.Editor prefsEditor = mSharedPref.edit();
-        ArrayList<Integer> currentValue = getSelectedToolIds();
-        if (currentValue == null) {
-            currentValue = new ArrayList<Integer>();
+        ArrayList<String> currentValue;
+
+        if (value.size() == 21) {
+            currentValue = value;
+        } else {
+            currentValue = getSelectedToolIds();
+            if (currentValue == null) {
+                currentValue = new ArrayList<>();
+            }
+            currentValue.addAll(value);
         }
-        currentValue.addAll(value);
         StringBuilder sb = new StringBuilder();
         String delim = "";
         for (int i = 0; i < currentValue.size(); i++) {
-            String s = String.valueOf(currentValue.get(i));
+            String s = currentValue.get(i);
             sb.append(delim);
             sb.append(s);
             delim = ",";
         }
         prefsEditor.putString(Constants.SELECTED_TOOL_IDS, sb.toString()).apply();
         prefsEditor.commit();
+    }
+
+    public static ArrayList<String> getAllSelectedSets() {
+        // this gets  string of sets each separated by a space
+        // example "1,2,3 0,4,5 6,7,9 8,10,11"
+        // and creates an array of Strings ["1,2,3", "0,4,5", "6,7,9", "8,10,11"]
+        ArrayList<String> arr = new ArrayList<String>();
+
+        if (keyExists(Constants.SELECTED_TOOL_SETS)) {
+            String ids = read(Constants.SELECTED_TOOL_SETS,"");
+            String[] idsStr = ids.split(" ");
+            for (int i = 0; i < idsStr.length; i++) {
+                arr.add(idsStr[i]);
+            }
+        }
+        return arr;
+    }
+
+    public static void addASelectedSet(String set) {
+        String currentSet = read(Constants.SELECTED_TOOL_SETS,"");
+        currentSet += " " + set;
+        write(Constants.SELECTED_TOOL_SETS,currentSet);
     }
 }

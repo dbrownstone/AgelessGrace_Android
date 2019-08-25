@@ -44,7 +44,7 @@
     <string name="seventh_day_title">Seventh Day</string>
     <string name="seventh_exercise">Exercise 7</string>
     <string name="no_music_available">No music is currently available!</string>
-    <string name="no_music_available_continuing_anyway">No music exists on thisemulator - continuing on as if the exercise has been completed</string>
+    <string name="no_music_available_continuing_anyway">No music exists on this emulator - continuing on as if the exercise has been completed</string>
     <string name="formatted_tool_title">Tool #%d: %s</string>
     <string name="exercise_screen_title">Time To Exercise</string>
 

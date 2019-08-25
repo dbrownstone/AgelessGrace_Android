@@ -72,7 +72,7 @@ public class SettingsFragment extends Fragment {
             }
         });
         pause_sw = (Switch) view.findViewById(R.id.pause_sw);
-        if (SharedPref.keyExists("No_Pause_between_tools")) {
+        if (SharedPref.keyExists("Pause_between_tools")) {
             pause_sw.setChecked(SharedPref.read("Pause_between_tools", false));
         }
         pause_result = (TextView) view.findViewById(R.id.pause_result);
