@@ -406,8 +406,11 @@ public class ToolFragment extends Fragment {
             SharedPref.remove(Constants.COMPLETED_TOOL_IDS);
             tools = allTools;
             toolsNo = resetToolsArray();
-            completeSelection();
-        }
+            showSelectButtonOnly();
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.tools_title);
+            mainActivity.invalidateOptionsMenu();
+            itemAdapter = new ItemAdapter(this, tools, toolsNo,  descriptions, true);
+            toolList.setAdapter(itemAdapter);        }
     }
 
     void selectTheAppropriateTitle(Integer whichDay) {
