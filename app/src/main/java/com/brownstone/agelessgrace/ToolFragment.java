@@ -322,6 +322,10 @@ public class ToolFragment extends Fragment {
                 selectMusicView();
                 break;
             default: // action_refresh_view
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+                String todaysDate = formatter.format(new Date());
+                String completedDate = SharedPref.read("Date_of_last_exercise", "");
+                lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
                 if (exerciseDaily && !lastExerciseWasCompletedToday) {
                     continueToNextItem();
                 } else {

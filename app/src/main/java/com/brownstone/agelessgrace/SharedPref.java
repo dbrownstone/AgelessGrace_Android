@@ -236,4 +236,17 @@ public class SharedPref {
         currentSet += " " + set;
         write(Constants.SELECTED_TOOL_SETS,currentSet);
     }
+
+    // clear all the preferences
+
+    public static void clearAllPreferences() {
+        remove(Constants.SELECTED_TOOL_IDS);
+        remove(Constants.SELECTED_TOOL_SETS);
+        remove(Constants.COMPLETED_TOOL_IDS);
+        remove(Constants.COMPLETED_TOOL_SETS);
+        remove(Constants.LAST_COMPLETED_TOOL_IDS);
+        remove(Constants.LAST_COMPLETED_TOOL_SET);
+        remove(Constants.LAST_EXERCISE_DATE);
+    }
+
 }

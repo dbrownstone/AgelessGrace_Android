@@ -69,6 +69,7 @@ public class SettingsFragment extends Fragment {
                 }
                 showSaveSettingsButton = true;
                 getActivity().invalidateOptionsMenu();
+                SharedPref.clearAllPreferences();
             }
         });
         pause_sw = (Switch) view.findViewById(R.id.pause_sw);
