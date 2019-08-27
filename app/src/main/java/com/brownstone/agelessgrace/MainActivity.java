@@ -1,5 +1,7 @@
 package com.brownstone.agelessgrace;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -11,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +30,8 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final AppLifecycleCallbacks mCallbacks = new AppLifecycleCallbacks();
+
     private static final int EMPTY = -1;
 
     String startingDate;
@@ -40,11 +45,14 @@ public class MainActivity extends AppCompatActivity {
     public Toolbar toolbar;
 
     ToolFragment toolsFragment;
+    static ExerciseActivity exercise;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getApplication().registerActivityLifecycleCallbacks(mCallbacks);
 
         SharedPref.init(getApplicationContext());
         DateManager.init(getApplicationContext());
@@ -197,4 +205,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public static class AppLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            Log.i(activity.getClass().getSimpleName(), "onCreate(Bundle)");
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            Log.i(activity.getClass().getSimpleName(), "onStop()");
+            String className = activity.getClass().getSimpleName();
+            if (className == "ExercisActivity") {
+                exercise.resumeMusic = true;
+                exercise.playMusic();
+            }
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+            Log.i(activity.getClass().getSimpleName(), "onResume()");
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+            Log.i(activity.getClass().getSimpleName(), "onPause()");
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            Log.i(activity.getClass().getSimpleName(), "onSaveInstanceState(Bundle)");
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            Log.i(activity.getClass().getSimpleName(), "onStop()");
+            String className = activity.getClass().getSimpleName();
+            if (className == "ExercisActivity") {
+                exercise.pauseSong();
+            }
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            Log.i(activity.getClass().getSimpleName(), "onDestroy()");
+        }
+    }
 }

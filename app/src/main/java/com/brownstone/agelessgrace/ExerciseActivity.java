@@ -1,6 +1,7 @@
 package com.brownstone.agelessgrace;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +48,8 @@ public class ExerciseActivity extends AppCompatActivity {
     DateManager dataMgr;
     Integer individualToolPeriod = (Constants.DAILY_EXERCISE_TIME) / 3;
 
+    public static boolean active = false;
+
     int tool1Index, tool2Index, tool3Index, currentIndex;
     String tool1Name;
     String tool2Name;
@@ -59,6 +64,7 @@ public class ExerciseActivity extends AppCompatActivity {
     MediaFileInfo secondSong;
     MediaFileInfo thirdSong;
     ImageView recordCover;
+    Boolean isActive = false;
     Boolean startExerciseImmediately = false;
     Boolean shouldPlayMusicItem = true;
     Boolean resumeMusic = false;
@@ -79,9 +85,24 @@ public class ExerciseActivity extends AppCompatActivity {
     int x;// where in the music file, the music was paused
 
     @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
+
+        isActive = true;
+
         Resources res = getResources();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.exercise_screen_title);
@@ -303,7 +324,7 @@ public class ExerciseActivity extends AppCompatActivity {
         return true;
     }
 
-    private void playMusic() {
+    public void playMusic() {
         Resources res = getResources();
         String theTitle = (res.getStringArray(R.array.tools))[tool1Index - 1];//String.format(res.getString(R.string.tool_title),tool1Index);
         switch (currentIndex) {
@@ -340,9 +361,9 @@ public class ExerciseActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    private void pauseSong() {
+    public void pauseSong() {
         if (mp.isPlaying()) {
-            mp.pause();
+            mp.stop();
             x = mp.getCurrentPosition();
         }
         totalTimeRemainingTV.setText(hourglass.RemainingTimeString());
