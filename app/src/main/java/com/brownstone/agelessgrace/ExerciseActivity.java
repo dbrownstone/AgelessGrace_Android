@@ -63,6 +63,7 @@ public class ExerciseActivity extends AppCompatActivity {
     MediaFileInfo firstSong;
     MediaFileInfo secondSong;
     MediaFileInfo thirdSong;
+    MediaFileInfo currentSelection;
     ImageView recordCover;
     Boolean isActive = false;
     Boolean startExerciseImmediately = false;
@@ -81,8 +82,9 @@ public class ExerciseActivity extends AppCompatActivity {
     Hourglass hourglass;
 
     ToolFragment toolFragment;
+    MainActivity mainActivity;
 
-    int x;// where in the music file, the music was paused
+    int length;// where in the music file, the music was paused
 
     @Override
     public void onStart() {
@@ -100,8 +102,6 @@ public class ExerciseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
-
-        isActive = true;
 
         Resources res = getResources();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -130,6 +130,7 @@ public class ExerciseActivity extends AppCompatActivity {
         songTitle = findViewById(R.id.song_title);
         currentIndex = 0;
         firstSong = selectedMusic.get(0);
+        currentSelection = firstSong;
         secondSong = selectedMusic.get(1);
         thirdSong = selectedMusic.get(2);
         songTitle.setText(firstSong.getSongTitle());
@@ -158,16 +159,16 @@ public class ExerciseActivity extends AppCompatActivity {
                 } else {
                     if (!mp.isPlaying()) {
                         mp.start();
-                        MediaFileInfo theSong = firstSong;
+//                        MediaFileInfo theSong = firstSong;
                         switch (currentIndex) {
                             case 1:
-                                theSong = secondSong;
+                                currentSelection = secondSong;
                                 break;
                             case 2:
-                                theSong = thirdSong;
+                                currentSelection = thirdSong;
                                 break;
                         }
-                        durationInt = Integer.parseInt((theSong.getDuration()));
+                        durationInt = Integer.parseInt((currentSelection.getDuration()));
                     }
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
@@ -228,7 +229,7 @@ public class ExerciseActivity extends AppCompatActivity {
         tool3.setTextColor(ContextCompat.getColor(this,R.color.AG_blue));
         String scrollingContent = "";
         if (pauseBetweenTools) {
-            pause();
+            pauseSong();
         } else {
             mp.stop();
         }
@@ -271,11 +272,21 @@ public class ExerciseActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_exercise_activity, menu);
-
+        menu.findItem(R.id.play_music).setVisible(false);
+        menu.findItem(R.id.pause_music).setVisible(false);
+        if (resumeMusic && startExerciseImmediately) {//if in backround and paused
+            resume();
+            return true;
+        }
         if (startExerciseImmediately) {
             menu.findItem(R.id.play_music).setVisible(false);
             menu.findItem(R.id.pause_music).setVisible(false);
-            mp = MediaPlayer.create(this, Uri.parse(firstSong.getFilePath()));
+            mp = MediaPlayer.create(this, Uri.parse(currentSelection.getFilePath()));
+            Resources res = getResources();
+            String toolName = tool1Name + " ";
+            String scrollingContent = res.getString(R.string.scrolling_content,toolName,bodyPartsText,waysToMoveText);
+            scrollingText.setText(scrollingContent);
+            scrollingText.setSelected(true);// starts the scroll
             playMusic();
         } else {
             if (shouldPlayMusicItem) {
@@ -302,7 +313,7 @@ public class ExerciseActivity extends AppCompatActivity {
             case R.id.play_music:
                 remainingTime = Constants.DAILY_EXERCISE_TIME;
                 if (!resumeMusic) {
-                    mp = MediaPlayer.create(this, Uri.parse(firstSong.getFilePath()));
+                    mp = MediaPlayer.create(this, Uri.parse(currentSelection.getFilePath()));
                 }
                 String scrollingContent = res.getString(R.string.scrolling_content,tool1Name,bodyPartsText,waysToMoveText);
                 scrollingText.setText(scrollingContent);
@@ -336,39 +347,43 @@ public class ExerciseActivity extends AppCompatActivity {
                 break;
         }
         getSupportActionBar().setTitle(theTitle);
-        if (resumeMusic) {
-            mp.seekTo(x);
-            resumeMusic = false;
-            hourglass.resumeTimer();
-        } else if (nextToolSelected) {
+        if (nextToolSelected) {
             hourglass.stopTimer();
             hourglass.setTime(remainingTime);//new Hourglass(remainingTime, 1000);
             didStartCountDown = true;
             hourglass.startTimer();
+            mp.start();
         } else {
+            Boolean isPaused = !mp.isPlaying() && length > 1;
+
+            if (isPaused) return;
             hourglass.startTimer();
+            mp.start();
         }
-        mp.start();
+
     }
 
-    private void pause() {
-        mp.stop();
-        totalTimeRemainingTV.setText(hourglass.RemainingTimeString());
-        shouldPlayMusicItem = true;
-        resumeMusic = true;
-        hourglass.pauseTimer();
-        scrollingText.stopNestedScroll();
-        invalidateOptionsMenu();
+    public void pause() {
+        pauseSong();
+    }
+
+    public void resume() {
+        hourglass.startTimer();
+        if (mp != null) {
+            mp.start();
+            mp.seekTo(length);
+            hourglass.resumeTimer();
+            scrollingText.setSelected(true);
+        }
     }
 
     public void pauseSong() {
         if (mp.isPlaying()) {
-            mp.stop();
-            x = mp.getCurrentPosition();
+            mp.pause();
+            length = mp.getCurrentPosition();
         }
         totalTimeRemainingTV.setText(hourglass.RemainingTimeString());
         shouldPlayMusicItem = true;
-        resumeMusic = true;
         hourglass.pauseTimer();
         scrollingText.stopNestedScroll();
         invalidateOptionsMenu();

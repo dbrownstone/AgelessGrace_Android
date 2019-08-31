@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     ToolFragment toolsFragment;
     static ExerciseActivity exercise;
+    static Boolean resumeTheMusic = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,26 +212,39 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
             Log.i(activity.getClass().getSimpleName(), "onCreate(Bundle)");
+            String className = activity.getClass().getSimpleName();
+            if (className.equals("ExerciseActivity") ) {
+                exercise = (ExerciseActivity) activity;
+            }
         }
 
         @Override
         public void onActivityStarted(Activity activity) {
             Log.i(activity.getClass().getSimpleName(), "onStop()");
-            String className = activity.getClass().getSimpleName();
-            if (className == "ExercisActivity") {
-                exercise.resumeMusic = true;
-                exercise.playMusic();
-            }
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
             Log.i(activity.getClass().getSimpleName(), "onResume()");
+            String className = activity.getClass().getSimpleName();
+            if (className.equals("ExerciseActivity") ) {
+                if (exercise != null && resumeTheMusic) {
+//                    resumeTheMusic = false;
+                    exercise.resume();
+                }
+            }
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
             Log.i(activity.getClass().getSimpleName(), "onPause()");
+            String className = activity.getClass().getSimpleName();
+            if (className.equals("ExerciseActivity")) {
+                if (exercise != null) {
+                    resumeTheMusic = true;
+                    exercise.pauseSong();
+                }
+            }
         }
 
         @Override
@@ -240,10 +255,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onActivityStopped(Activity activity) {
             Log.i(activity.getClass().getSimpleName(), "onStop()");
-            String className = activity.getClass().getSimpleName();
-            if (className == "ExercisActivity") {
-                exercise.pauseSong();
-            }
         }
 
         @Override
