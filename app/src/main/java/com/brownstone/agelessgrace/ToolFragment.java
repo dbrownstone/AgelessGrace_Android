@@ -328,13 +328,40 @@ public class ToolFragment extends Fragment {
                 String todaysDate = formatter.format(new Date());
                 String completedDate = SharedPref.read("Date_of_last_exercise", "");
                 lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
+                LayoutInflater inflater = this.getActivity().getLayoutInflater();
                 if ((exerciseDaily && !lastExerciseWasCompletedToday) || isEmulator())  {
-                    continueToNextItem();
+                    if (isEmulator()) {
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogTheme);
+
+                        alertDialog.setView(inflater.inflate(R.layout.centered_image_alert, null));
+//
+                        alertDialog.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.setNeutralButton("Bypass",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        continueToNextItem();
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                        break;
+                    } else {
+                        continueToNextItem();
+                    }
                 } else {
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext(), R.style.AGAlertDialog);
-                    alertDialog.setTitle(R.string.alert_done_header);
-                    String message = getString(R.string.alert_exercise_done);
-                    alertDialog.setMessage(message);
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogTheme);
+
+                    alertDialog.setView(inflater.inflate(R.layout.centered_image_alert, null));
+//
                     alertDialog.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -391,7 +418,7 @@ public class ToolFragment extends Fragment {
         if (completedToolSets == null || completedToolSets.size() == 0) {
             selectedToolSet = selectedToolSets.get(0);
         } else  if (completedToolSets.size() < 7) {
-            selectedToolSet = selectedToolSets.get(completedToolSets.size());
+            selectedToolSet = selectedToolSets.get(completedToolSets.size() - 1);
         }
         if (selectedToolSet != "") {
             prepareToolForDisplay(selectedToolSet);
