@@ -21,12 +21,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -45,13 +47,13 @@ import java.util.Set;
 
 public class MusicSelectorActivity extends AppCompatActivity {
 
-    ArrayList<MediaFileInfo> selectedMusic = new ArrayList<MediaFileInfo>();
-    ArrayList<Integer> selectedMusicLocations = new ArrayList<Integer>();
+    ArrayList<MediaFileInfo> selectedMusic = new ArrayList<>();
+    ArrayList<Integer> selectedMusicLocations = new ArrayList<>();
     public static ArrayList<MediaFileInfo> resultantMusicSelection;
 
-    ArrayList<String> audioList = new ArrayList<String>();
+    ArrayList<String> audioList = new ArrayList<>();
     MusicListItemAdapter itemAdapter;
-    ArrayList<MediaFileInfo> availableMusic = new ArrayList<MediaFileInfo>();
+    ArrayList<MediaFileInfo> availableMusic = new ArrayList<>();
     ListView musicList;
     Boolean permissionsGranted = false;
     String toolSelectionType = "";
@@ -65,7 +67,7 @@ public class MusicSelectorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_selector);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // Enable the Up button
@@ -80,7 +82,7 @@ public class MusicSelectorActivity extends AppCompatActivity {
         tool3Index = bundle.getInt("tool3Index");
         repeating = bundle.getBoolean("repeating");
 
-        musicList = (ListView) findViewById(R.id.music_list_view);
+        musicList = findViewById(R.id.music_list_view);
 
         if (checkPermission()) {
             parseAllAudio();
@@ -152,7 +154,7 @@ public class MusicSelectorActivity extends AppCompatActivity {
                 musicList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        CheckBox cb = (CheckBox) view.findViewById(R.id.checkBox);
+                        CheckBox cb = view.findViewById(R.id.checkBox);
                         cb.setChecked(!cb.isChecked());
                         if (cb.isChecked()) {
                             selectedMusic.add(availableMusic.get(position));
@@ -169,41 +171,47 @@ public class MusicSelectorActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                final Boolean isEmulator = isEmulator();
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.alert_title);
-                String message = getString(R.string.no_music_available);
+                final boolean isEmulator = isEmulator();
                 if (isEmulator) {
-                    message = getString(R.string.no_music_available_continuing_anyway);
-                }
+                    LayoutInflater inflater = this.getLayoutInflater();
 
-                builder.setMessage(message);
-                // add the buttons
-                builder.setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                if (isEmulator) {
-                                    returnToMainActivity();
-                                } else {
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    setResult(RESULT_CANCELED, intent);
-                                    startActivity(intent);
+                    android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AlertDialogTheme);
+                    View view = inflater.inflate(R.layout.centered_image_alert, null);
+                    alertDialog.setView(view);
+                    TextView theMessage = view.findViewById((R.id.alertMessage));
+                    TextView title = view.findViewById((R.id.alertTitle));
+                    title.setText(R.string.alert_title);
+                    String message = getString(R.string.no_music_available);
+                    if (isEmulator) {
+                        message = getString(R.string.no_music_available_continuing_anyway);
+                    }
+
+                    theMessage.setText(message);
+                    // add the buttons
+                    alertDialog.setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    if (isEmulator) {
+                                        returnToMainActivity();
+                                    } else {
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        setResult(RESULT_CANCELED, intent);
+                                        startActivity(intent);
+                                    }
                                 }
-                            }
-                        });
-                builder.setNegativeButton(R.string.action_cancel,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+                            });
+                    alertDialog.setNegativeButton(R.string.action_cancel,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
 
-                // create and show the alert dialog
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                    // create and show the alert dialog
+                    alertDialog.show();
 
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -217,7 +225,7 @@ public class MusicSelectorActivity extends AppCompatActivity {
             DateManager.setStartToEndDates();
         }
 
-        ArrayList<String> toolIds = new ArrayList<String>(3);
+        ArrayList<String> toolIds = new ArrayList<>(3);
         toolIds.add(String.valueOf(tool1Index));
         toolIds.add(String.valueOf(tool2Index));
         toolIds.add(String.valueOf(tool3Index));

@@ -16,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,8 +89,11 @@ public class ToolFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         thisView = inflater.inflate(R.layout.tools_tab_fragment, container, false);
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.tools_title);
-
+        try {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.tools_title);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mainActivity = (MainActivity) getActivity();
         tools = getResources().getStringArray(R.array.tools);
         allTools = tools;
@@ -103,14 +108,14 @@ public class ToolFragment extends Fragment {
         for (int i = 0; i < selectedToolSets.size(); i++) {
             String toolSet = selectedToolSets.get(i);
             String[] numbersStr = toolSet.split(",");
-            ArrayList<Integer> arr = new ArrayList<Integer>();
-            for(int j=0; j<numbersStr.length; j++) {
-                selectedTools.add(i,String.valueOf(numbersStr[j]));
+            ArrayList<Integer> arr = new ArrayList<>();
+            for (String s : numbersStr) {
+                selectedTools.add(i, String.valueOf(s));
             }
         }
 
-        String nextToolSet = "";
-        Integer whichDay = 1;
+        String nextToolSet;
+        int whichDay = 1;
         if (selectedToolSets.size() == 7) {
             Integer theTitleId;
             if (completedToolSets == null || completedToolSets.size() == 0) {
@@ -203,7 +208,11 @@ public class ToolFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Refresh fragment
-            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+            try {
+                getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -214,7 +223,8 @@ public class ToolFragment extends Fragment {
     }
 
     void getSharedPreferences() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("yyyyMMdd");
         String todaysDate = formatter.format(new Date());
         String completedDate = SharedPref.read("Date_of_last_exercise", "");
         lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
@@ -232,13 +242,13 @@ public class ToolFragment extends Fragment {
     }
 
     void setupCompletedSets() {
-        String aSet = "";
+        String aSet;
         completedToolSets = new ArrayList<>();
         if (completedToolIds == null) {
             return;
         }
-        for (int i = 0; i <  completedToolIds.size(); i = i += 3) {
-            aSet = String.valueOf(completedToolIds.get(i)) + "," + String.valueOf(completedToolIds.get(i + 1)) + "," + String.valueOf(completedToolIds.get(i + 2));
+        for (int i = 0; i <  completedToolIds.size(); i += 3) {
+            aSet = completedToolIds.get(i) + "," + String.valueOf(completedToolIds.get(i + 1)) + "," + String.valueOf(completedToolIds.get(i + 2));
             if (completedToolSets == null) {
                 completedToolSets = new ArrayList<>();
             }
@@ -306,7 +316,7 @@ public class ToolFragment extends Fragment {
                 break;
             case R.id.action_commit:
                 show_commit_button = false;
-                String selectedToolSet = "";
+                String selectedToolSet;
                 if (completedToolSets == null || completedToolSets.size() == 0) {
                     selectedToolSet = selectedToolSets.get(0);
                 } else {
@@ -328,13 +338,16 @@ public class ToolFragment extends Fragment {
                 String todaysDate = formatter.format(new Date());
                 String completedDate = SharedPref.read("Date_of_last_exercise", "");
                 lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
-                LayoutInflater inflater = this.getActivity().getLayoutInflater();
+
                 if ((exerciseDaily && !lastExerciseWasCompletedToday) || isEmulator())  {
                     if (isEmulator()) {
+                        LayoutInflater inflater = this.getActivity().getLayoutInflater();
+
                         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogTheme);
 
-                        alertDialog.setView(inflater.inflate(R.layout.centered_image_alert, null));
-//
+                        View view = inflater.inflate(R.layout.centered_image_alert, null);
+                        alertDialog.setView(view);
+
                         alertDialog.setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     @Override
@@ -358,10 +371,13 @@ public class ToolFragment extends Fragment {
                         continueToNextItem();
                     }
                 } else {
+                    LayoutInflater inflater = this.getActivity().getLayoutInflater();
+
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogTheme);
 
-                    alertDialog.setView(inflater.inflate(R.layout.centered_image_alert, null));
-//
+                    View view = inflater.inflate(R.layout.centered_image_alert, null);
+                    alertDialog.setView(view);
+
                     alertDialog.setPositiveButton("OK",
                             new DialogInterface.OnClickListener() {
                                 @Override
@@ -373,6 +389,7 @@ public class ToolFragment extends Fragment {
                     alertDialog.show();
                     break;
                 }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -400,7 +417,7 @@ public class ToolFragment extends Fragment {
             itemAdapter = new ItemAdapter(this, tools, toolsNo,  descriptions, true);
             toolList.setAdapter(itemAdapter);
         } else {
-            Integer dayOfExercise = 1;
+            int dayOfExercise = 1;
             if (completedToolSets != null) {
                 dayOfExercise = completedToolSets.size() + 1;
             }
@@ -412,7 +429,7 @@ public class ToolFragment extends Fragment {
     }
 
     void continueToNextItem() {
-        String selectedToolSet = "";
+        String selectedToolSet;
         show_continue_button = false;
         selectedToolSet = "";
         if (completedToolSets == null || completedToolSets.size() == 0) {
@@ -540,7 +557,7 @@ public class ToolFragment extends Fragment {
             theIndex = position;
         }
         showToolDescriptionActivity.putExtra("theIndex", theIndex);
-        showToolDescriptionActivity.putStringArrayListExtra("selections", (ArrayList<String>)currentSelection);
+        showToolDescriptionActivity.putStringArrayListExtra("selections", currentSelection);
         startActivity(showToolDescriptionActivity);
     }
 
@@ -560,10 +577,18 @@ public class ToolFragment extends Fragment {
         // setup the alert builder
         int numberOfToolsToSelectRandomly = 7 - selectedToolSets.size();
         Context context = this.getContext();
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setIcon(R.drawable.product_logo_small);
+        LayoutInflater inflater = this.getActivity().getLayoutInflater();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogTheme);
+
+        View view = inflater.inflate(R.layout.centered_image_alert, null);
+
+        builder.setView(view);
+
+        TextView message = view.findViewById((R.id.alertMessage));
+        TextView title = view.findViewById((R.id.alertTitle));
         if (selectedToolSets.size() > 0 && selectedToolSets.size() < 7) {
-            builder.setMessage(String.format((getResources().getString(R.string.alert_select_more)), numberOfToolsToSelectRandomly));
+            message.setText(String.format((getResources().getString(R.string.alert_select_more)), numberOfToolsToSelectRandomly));
             builder.setPositiveButton(R.string.all,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -578,7 +603,7 @@ public class ToolFragment extends Fragment {
                         }
                     });
         } else {
-            builder.setMessage(R.string.alert_select);
+            message.setText(R.string.alert_select);
             builder.setPositiveButton(R.string.ok,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -586,7 +611,7 @@ public class ToolFragment extends Fragment {
                         }
                     });
         }
-        builder.setTitle(R.string.select_the_tools);
+        title.setText(R.string.select_the_tools);
 
         builder.setNeutralButton(R.string.action_cancel,
                 new DialogInterface.OnClickListener() {
@@ -599,7 +624,7 @@ public class ToolFragment extends Fragment {
 
     void selectRandomToolSets(Boolean all) {
         ArrayList<Integer> randomNumbers = new ArrayList<>();
-        Integer randCnt = 21;
+        int randCnt = 21;
         if (all) {
             selectedTools = new ArrayList<>();
             selectedToolSets = new ArrayList<>();
@@ -611,8 +636,8 @@ public class ToolFragment extends Fragment {
                 for (int i = 0; i < selectedToolSets.size(); i++) {
                     String toolSet = selectedToolSets.get(i);
                     String[] numbersStr = toolSet.split(",");
-                    for(int j=0; j<numbersStr.length; j++) {
-                        selectedTools.add(String.valueOf(numbersStr[j]));
+                    for (String s : numbersStr) {
+                        selectedTools.add(String.valueOf(s));
                     }
                 }
             }
@@ -653,7 +678,7 @@ public class ToolFragment extends Fragment {
     }
 
     void prepareDisplay() {
-        String nextToolSet = "";
+        String nextToolSet;
         if (completedToolSets == null || completedToolSets.size() == 0) {
             selectTheAppropriateTitle(1);
             nextToolSet = selectedToolSets.get(0);

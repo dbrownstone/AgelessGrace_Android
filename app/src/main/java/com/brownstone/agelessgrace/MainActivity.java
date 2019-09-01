@@ -15,9 +15,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,13 +65,13 @@ public class MainActivity extends AppCompatActivity {
         tools = res.getStringArray(R.array.tools);
         descriptions = res.getStringArray(R.array.primary_benefits);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.tools_tab)).setIcon(R.mipmap.tools));
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.settings_tab)).setIcon(R.mipmap.settings));
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.about_tab)).setIcon(R.mipmap.about));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final ViewPager viewPager = findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
@@ -192,9 +194,17 @@ public class MainActivity extends AppCompatActivity {
             if (SharedPref.read(Constants.EXERCISE_DAILY, true)) nextTime = "tomorrow";
             message = getString(R.string.congrats_ten_minute_completion, nextTime);
         }
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AGAlertDialog);
-        alertDialog.setTitle(R.string.congrats);
-        alertDialog.setMessage(message);
+        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+        View view = inflater.inflate(R.layout.centered_image_alert, null);
+        alertDialog.setView(view);
+
+        TextView theMessage = (TextView) view.findViewById((R.id.alertMessage));
+        TextView title = (TextView) view.findViewById((R.id.alertTitle));
+        title.setText(R.string.congrats);
+        theMessage.setText(message);
+
         alertDialog.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     @Override
