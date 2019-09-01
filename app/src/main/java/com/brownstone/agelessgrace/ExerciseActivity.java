@@ -71,6 +71,7 @@ public class ExerciseActivity extends AppCompatActivity {
     Boolean resumeMusic = false;
     Boolean nextToolSelected = false;
     Boolean pauseBetweenTools = true;
+    Boolean allCompleted = false;
     TextView totalTimeRemainingTV;
     long remainingTime;
     Boolean didStartCountDown = false;
@@ -187,6 +188,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
     void returnToMainActivity() {
         //need to set start and end dates if not set
+        allCompleted = true;
         Resources res = getResources();
         if ((DateManager.getStartToEndDates()).size() == 0) {
             DateManager.setStartToEndDates();

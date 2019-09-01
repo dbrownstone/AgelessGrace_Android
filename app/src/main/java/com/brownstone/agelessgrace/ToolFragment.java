@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.brownstone.agelessgrace.MusicSelectorActivity.isEmulator;
+
 public class ToolFragment extends Fragment {
 
     View thisView;
@@ -326,7 +328,7 @@ public class ToolFragment extends Fragment {
                 String todaysDate = formatter.format(new Date());
                 String completedDate = SharedPref.read("Date_of_last_exercise", "");
                 lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
-                if (exerciseDaily && !lastExerciseWasCompletedToday) {
+                if ((exerciseDaily && !lastExerciseWasCompletedToday) || isEmulator())  {
                     continueToNextItem();
                 } else {
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext(), R.style.AGAlertDialog);

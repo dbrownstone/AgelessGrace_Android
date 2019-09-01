@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(activity.getClass().getSimpleName(), "onPause()");
             String className = activity.getClass().getSimpleName();
             if (className.equals("ExerciseActivity")) {
-                if (exercise != null) {
+                if (exercise != null && !exercise.allCompleted) {
                     resumeTheMusic = true;
                     exercise.pauseSong();
                 }
