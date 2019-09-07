@@ -45,6 +45,8 @@
     <string name="seventh_exercise">Exercise 7</string>
     <string name="no_music_available">No music is currently available!</string>
     <string name="no_music_available_continuing_anyway">No music exists on this emulator - continuing on as if the exercise has been completed</string>
+    <string name="no_music_available_on_emulator">No music exists on this emulator - continuing on as if the exercise has been completed</string>
+    <string name="no_music_available_on_this_device_continuing_anyway">No music exists on this device - exercise will take place with no music</string>
     <string name="formatted_tool_title">Tool #%d: %s</string>
     <string name="exercise_screen_title">Time To Exercise</string>
 

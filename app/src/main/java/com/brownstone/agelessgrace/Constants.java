@@ -2,7 +2,7 @@ package com.brownstone.agelessgrace;
 
 final public class Constants {
     //Exercise time set to 10 minutes
-    public static final Integer DAILY_EXERCISE_TIME = 600000;
+    public static final Integer DAILY_EXERCISE_TIME = 600000; //600000 =  10 mins;
 
     public static final int EXERCISE_ACTIVITY_REQUEST_CODE = 0;
     public static final int DESCRIPTION_ACTIVITY_REQUEST_CODE = 1;

@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -39,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.brownstone.agelessgrace.Hourglass;
 
+import static com.brownstone.agelessgrace.Constants.DAILY_EXERCISE_TIME;
 import static java.lang.Math.PI;
 import static java.lang.Math.toIntExact;
 
@@ -46,7 +48,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
     public static final String TAG = "ExerciseActivity";
     DateManager dataMgr;
-    Integer individualToolPeriod = (Constants.DAILY_EXERCISE_TIME) / 3;
+    Integer individualToolPeriod = (DAILY_EXERCISE_TIME) / 3;
 
     public static boolean active = false;
 
@@ -103,6 +105,7 @@ public class ExerciseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Resources res = getResources();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -118,7 +121,9 @@ public class ExerciseActivity extends AppCompatActivity {
         tool1Name = (res.getStringArray(R.array.tools))[tool1Index - 1];
         tool2Name = (res.getStringArray(R.array.tools))[tool2Index - 1];
         tool3Name = (res.getStringArray(R.array.tools))[tool3Index - 1];
-        selectedMusic = MusicSelectorActivity.getData();
+        if (selectedMusic.size() > 0) {
+            selectedMusic = MusicSelectorActivity.getData();
+        }
         scrollingText = findViewById(R.id.scrollingTextView);
         bodyPartsText = (res.getStringArray(R.array.body_parts_to_move)[tool1Index]);
         waysToMoveText = (res.getStringArray(R.array.ways_to_move_them)[tool1Index]);
@@ -130,21 +135,31 @@ public class ExerciseActivity extends AppCompatActivity {
         tool3.setText(res.getString(R.string.formatted_tool_title, tool3Index, (res.getStringArray(R.array.tools))[tool3Index - 1]));
         songTitle = findViewById(R.id.song_title);
         currentIndex = 0;
-        firstSong = selectedMusic.get(0);
-        currentSelection = firstSong;
-        secondSong = selectedMusic.get(1);
-        thirdSong = selectedMusic.get(2);
-        songTitle.setText(firstSong.getSongTitle());
-        artist = findViewById(R.id.artist);
-        artist.setText(firstSong.getArtist());
-        durationInt = Integer.parseInt((firstSong.getDuration()));
-        timeRemaining = findViewById(R.id.song_time_remaining);
-        timeRemaining.setText(formatSongTime(durationInt));
-        recordCover = findViewById(R.id.imageView);
-        recordCover.setImageBitmap(firstSong.getBitmap());
+        if (selectedMusic.size() > 0) {
+            firstSong = selectedMusic.get(0);
+            currentSelection = firstSong;
+            secondSong = selectedMusic.get(1);
+            thirdSong = selectedMusic.get(2);
+            songTitle.setText(firstSong.getSongTitle());
+            artist = findViewById(R.id.artist);
+            artist.setText(firstSong.getArtist());
+            durationInt = Integer.parseInt((firstSong.getDuration()));
+            timeRemaining = findViewById(R.id.song_time_remaining);
+            timeRemaining.setText(formatSongTime(durationInt));
+            recordCover = findViewById(R.id.imageView);
+            recordCover.setImageBitmap(firstSong.getBitmap());
+        } else {
+            artist = findViewById(R.id.artist);
+            artist.setText(" ");
+            durationInt = DAILY_EXERCISE_TIME / 3;
+            timeRemaining = findViewById(R.id.song_time_remaining);
+            timeRemaining.setText(formatSongTime(durationInt));
+            recordCover = findViewById(R.id.imageView);
+        }
         totalTimeRemainingTV = findViewById(R.id.total_time_remaining);
-        totalTimeRemainingTV.setText(formatSongTime(Constants.DAILY_EXERCISE_TIME));
-        hourglass = new Hourglass(Constants.DAILY_EXERCISE_TIME, 1000) {
+        totalTimeRemainingTV.setText(formatSongTime(DAILY_EXERCISE_TIME));
+
+        hourglass = new Hourglass(DAILY_EXERCISE_TIME, 1000) {
             @Override
             public void onTimerTick(long remainingTime) {
                 totalTimeRemainingTV.setText(hourglass.RemainingTimeString());
@@ -153,12 +168,12 @@ public class ExerciseActivity extends AppCompatActivity {
                 //if tool has been completed
                 if (individualToolPeriod <= 0) {
                     currentIndex += 1;
-                    individualToolPeriod = (Constants.DAILY_EXERCISE_TIME)/3;
+                    individualToolPeriod = (DAILY_EXERCISE_TIME)/3;
                     if (remainingTime >= 1000) {
                         changeTools(currentIndex);
                     }
                 } else {
-                    if (!mp.isPlaying()) {
+                    if (selectedMusic.size() > 0 && !mp.isPlaying()) {
                         mp.start();
 //                        MediaFileInfo theSong = firstSong;
                         switch (currentIndex) {
@@ -170,6 +185,8 @@ public class ExerciseActivity extends AppCompatActivity {
                                 break;
                         }
                         durationInt = Integer.parseInt((currentSelection.getDuration()));
+                    } else {
+                        durationInt = DAILY_EXERCISE_TIME / 3;
                     }
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
@@ -177,10 +194,10 @@ public class ExerciseActivity extends AppCompatActivity {
 
             @Override
             public void onTimerFinish() {
-                if (mp.isPlaying()) {
+                if (selectedMusic.size() > 0 && !mp.isPlaying()) {
                     mp.stop();
+                    mp.release();
                 }
-                mp.release();
                 returnToMainActivity();
             }
         };
@@ -233,17 +250,23 @@ public class ExerciseActivity extends AppCompatActivity {
         if (pauseBetweenTools) {
             pauseSong();
         } else {
-            mp.stop();
+            if (selectedMusic.size() > 0 && mp.isPlaying()) {
+                mp.stop();
+            }
         }
         Resources res = getResources();
         String toolName = tool1Name + " ";
         switch (nextTool) {
             case 1:
-                mp = MediaPlayer.create(this,Uri.parse(secondSong.getFilePath()));
-                recordCover.setImageBitmap(secondSong.getBitmap());
-                songTitle.setText(secondSong.getSongTitle());
-                artist.setText(secondSong.getArtist());
-                durationInt = Integer.parseInt((secondSong.getDuration()));
+                if (selectedMusic.size() > 0) {
+                    mp = MediaPlayer.create(this, Uri.parse(secondSong.getFilePath()));
+                    recordCover.setImageBitmap(secondSong.getBitmap());
+                    songTitle.setText(secondSong.getSongTitle());
+                    artist.setText(secondSong.getArtist());
+                    durationInt = Integer.parseInt((secondSong.getDuration()));
+                } else {
+                    durationInt = DAILY_EXERCISE_TIME / 3;
+                }
                 timeRemaining.setText(formatSongTime(durationInt));
                 tool2.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
                 toolName = tool2Name + " ";
@@ -251,12 +274,16 @@ public class ExerciseActivity extends AppCompatActivity {
                 waysToMoveText = (res.getStringArray(R.array.ways_to_move_them)[tool2Index - 1]);
                 break;
             case 2:
-                mp.stop();
-                mp = MediaPlayer.create(this,Uri.parse(thirdSong.getFilePath()));
-                recordCover.setImageBitmap(thirdSong.getBitmap());
-                songTitle.setText(thirdSong.getSongTitle());
-                artist.setText(thirdSong.getArtist());
-                durationInt = Integer.parseInt((thirdSong.getDuration()));
+                if (selectedMusic.size() > 0) {
+                    mp.stop();
+                    mp = MediaPlayer.create(this, Uri.parse(thirdSong.getFilePath()));
+                    recordCover.setImageBitmap(thirdSong.getBitmap());
+                    songTitle.setText(thirdSong.getSongTitle());
+                    artist.setText(thirdSong.getArtist());
+                    durationInt = Integer.parseInt((thirdSong.getDuration()));
+                } else {
+                    durationInt = DAILY_EXERCISE_TIME / 3;
+                }
                 timeRemaining.setText(formatSongTime(durationInt));
                 tool3.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
                 toolName = tool3Name + " ";
@@ -283,7 +310,9 @@ public class ExerciseActivity extends AppCompatActivity {
         if (startExerciseImmediately) {
             menu.findItem(R.id.play_music).setVisible(false);
             menu.findItem(R.id.pause_music).setVisible(false);
-            mp = MediaPlayer.create(this, Uri.parse(currentSelection.getFilePath()));
+            if (selectedMusic.size() > 0) {
+                mp = MediaPlayer.create(this, Uri.parse(currentSelection.getFilePath()));
+            }
             Resources res = getResources();
             String toolName = tool1Name + " ";
             String scrollingContent = res.getString(R.string.scrolling_content,toolName,bodyPartsText,waysToMoveText);
@@ -313,7 +342,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.play_music:
-                remainingTime = Constants.DAILY_EXERCISE_TIME;
+                remainingTime = DAILY_EXERCISE_TIME;
                 if (!resumeMusic) {
                     mp = MediaPlayer.create(this, Uri.parse(currentSelection.getFilePath()));
                 }
@@ -354,13 +383,21 @@ public class ExerciseActivity extends AppCompatActivity {
             hourglass.setTime(remainingTime);//new Hourglass(remainingTime, 1000);
             didStartCountDown = true;
             hourglass.startTimer();
-            mp.start();
+            if (selectedMusic.size() > 0) {
+                mp.start();
+            }
         } else {
-            Boolean isPaused = !mp.isPlaying() && length > 1;
+            Boolean isPaused = false;
 
-            if (isPaused) return;
+            if (selectedMusic.size() > 0) {
+                isPaused = !mp.isPlaying() && length > 1;
+
+                if (isPaused) return;
+            }
             hourglass.startTimer();
-            mp.start();
+            if (selectedMusic.size() > 0) {
+                mp.start();
+            }
         }
 
     }

@@ -172,7 +172,7 @@ public class MusicSelectorActivity extends AppCompatActivity {
                 });
             } else {
                 final boolean isEmulator = isEmulator();
-                if (isEmulator) {
+//                if (isEmulator) {
                     LayoutInflater inflater = this.getLayoutInflater();
 
                     android.support.v7.app.AlertDialog.Builder alertDialog = new android.support.v7.app.AlertDialog.Builder(this, R.style.AlertDialogTheme);
@@ -183,7 +183,9 @@ public class MusicSelectorActivity extends AppCompatActivity {
                     title.setText(R.string.alert_title);
                     String message = getString(R.string.no_music_available);
                     if (isEmulator) {
-                        message = getString(R.string.no_music_available_continuing_anyway);
+                        message = getString(R.string.no_music_available_on_emulator);
+                    } else {
+                        message = getString(R.string.no_music_available_on_this_device_continuing_anyway);
                     }
 
                     theMessage.setText(message);
@@ -195,9 +197,18 @@ public class MusicSelectorActivity extends AppCompatActivity {
                                     if (isEmulator) {
                                         returnToMainActivity();
                                     } else {
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        setResult(RESULT_CANCELED, intent);
-                                        startActivity(intent);
+
+//                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                                        setResult(RESULT_CANCELED, intent);
+//                                        startActivity(intent);
+                                        resultantMusicSelection = new ArrayList<>();
+                                        Intent exerciseActivity = new Intent(getApplicationContext(), ExerciseActivity.class);
+                                        exerciseActivity.putExtra("selectionType", toolSelectionType);
+                                        exerciseActivity.putExtra("tool1Index", tool1Index);
+                                        exerciseActivity.putExtra("tool2Index", tool2Index);
+                                        exerciseActivity.putExtra("tool3Index", tool3Index);
+                                        exerciseActivity.putExtra("repeating", repeating);
+                                        startActivity(exerciseActivity);
                                     }
                                 }
                             });
@@ -211,7 +222,7 @@ public class MusicSelectorActivity extends AppCompatActivity {
                     // create and show the alert dialog
                     alertDialog.show();
 
-                }
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();
