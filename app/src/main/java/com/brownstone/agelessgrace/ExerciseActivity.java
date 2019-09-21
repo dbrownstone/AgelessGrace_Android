@@ -40,16 +40,22 @@ import java.util.concurrent.TimeUnit;
 
 import com.brownstone.agelessgrace.Hourglass;
 
+import static com.brownstone.agelessgrace.BuildConfig.DEBUG;
 import static com.brownstone.agelessgrace.Constants.DAILY_EXERCISE_TIME;
+import static com.brownstone.agelessgrace.BuildConfig.BUILD_TYPE;
+
 import static java.lang.Math.PI;
 import static java.lang.Math.toIntExact;
+
+
 
 public class ExerciseActivity extends AppCompatActivity {
 
     public static final String TAG = "ExerciseActivity";
     DateManager dataMgr;
-    Integer individualToolPeriod = (DAILY_EXERCISE_TIME) / 3;
 
+    Integer totalExercisePeriod =  DAILY_EXERCISE_TIME;
+    Integer individualToolPeriod = (totalExercisePeriod) / 3;
     public static boolean active = false;
 
     int tool1Index, tool2Index, tool3Index, currentIndex;
@@ -107,6 +113,11 @@ public class ExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+//        if (BuildConfig.BUILD_TYPE == "debug")
+        if (DEBUG) {
+            totalExercisePeriod = DAILY_EXERCISE_TIME / 10;
+        }
+
         Resources res = getResources();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.exercise_screen_title);
@@ -151,24 +162,24 @@ public class ExerciseActivity extends AppCompatActivity {
         } else {
             artist = findViewById(R.id.artist);
             artist.setText(" ");
-            durationInt = DAILY_EXERCISE_TIME / 3;
+            durationInt = totalExercisePeriod / 3;
             timeRemaining = findViewById(R.id.song_time_remaining);
             timeRemaining.setText(formatSongTime(durationInt));
             recordCover = findViewById(R.id.imageView);
         }
         totalTimeRemainingTV = findViewById(R.id.total_time_remaining);
-        totalTimeRemainingTV.setText(formatSongTime(DAILY_EXERCISE_TIME));
+        totalTimeRemainingTV.setText(formatSongTime(totalExercisePeriod));
 
-        hourglass = new Hourglass(DAILY_EXERCISE_TIME, 1000) {
+        hourglass = new Hourglass(totalExercisePeriod, 1000) {
             @Override
             public void onTimerTick(long remainingTime) {
                 totalTimeRemainingTV.setText(hourglass.RemainingTimeString());
                 individualToolPeriod -= 1000;
                 durationInt -= 1000;
                 //if tool has been completed
-                if (individualToolPeriod <= 0) {
+                if (durationInt <= 0) {
                     currentIndex += 1;
-                    individualToolPeriod = (DAILY_EXERCISE_TIME)/3;
+                    individualToolPeriod = totalExercisePeriod/3;
                     if (remainingTime >= 1000) {
                         changeTools(currentIndex);
                     }
@@ -185,8 +196,6 @@ public class ExerciseActivity extends AppCompatActivity {
                                 break;
                         }
                         durationInt = Integer.parseInt((currentSelection.getDuration()));
-                    } else {
-                        durationInt = DAILY_EXERCISE_TIME / 3;
                     }
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
@@ -265,7 +274,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     artist.setText(secondSong.getArtist());
                     durationInt = Integer.parseInt((secondSong.getDuration()));
                 } else {
-                    durationInt = DAILY_EXERCISE_TIME / 3;
+                    durationInt = totalExercisePeriod / 3;
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
                 tool2.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
@@ -282,7 +291,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     artist.setText(thirdSong.getArtist());
                     durationInt = Integer.parseInt((thirdSong.getDuration()));
                 } else {
-                    durationInt = DAILY_EXERCISE_TIME / 3;
+                    durationInt = totalExercisePeriod / 3;
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
                 tool3.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
@@ -342,7 +351,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.play_music:
-                remainingTime = DAILY_EXERCISE_TIME;
+                remainingTime = totalExercisePeriod;
                 if (!resumeMusic) {
                     mp = MediaPlayer.create(this, Uri.parse(currentSelection.getFilePath()));
                 }
