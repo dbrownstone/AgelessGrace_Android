@@ -132,9 +132,8 @@ public class ExerciseActivity extends AppCompatActivity {
         tool1Name = (res.getStringArray(R.array.tools))[tool1Index - 1];
         tool2Name = (res.getStringArray(R.array.tools))[tool2Index - 1];
         tool3Name = (res.getStringArray(R.array.tools))[tool3Index - 1];
-        if (selectedMusic.size() > 0) {
-            selectedMusic = MusicSelectorActivity.getData();
-        }
+        selectedMusic = MusicSelectorActivity.getData();
+
         scrollingText = findViewById(R.id.scrollingTextView);
         bodyPartsText = (res.getStringArray(R.array.body_parts_to_move)[tool1Index]);
         waysToMoveText = (res.getStringArray(R.array.ways_to_move_them)[tool1Index]);

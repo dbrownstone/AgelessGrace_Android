@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        release {
+            storeFile file("ag_release-key.keystore")
+            storePassword "db1622"
+            keyAlias "agelessgrace"
+            keyPassword "db1622"
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.brownstone.agelessgrace"
@@ -8,12 +16,16 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        setProperty("archivesBaseName", "AgelessGrace-$versionName")
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig = signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix ".debug"
         }
     }
 }

@@ -112,7 +112,7 @@ public class ItemAdapter extends BaseAdapter {
         }
         if (adapterTools.length > 3) {
             if (selectedToolNos != null && selectedToolNos.contains(String.valueOf(position))) {
-                if (completedToolIds != null && completedToolIds.contains(String.valueOf(position))) {
+                if (completedToolIds != null && completedToolIds.contains(position + 1)) {
                     selectButton.setVisibility(View.INVISIBLE);
                 } else{
                     selectButton.setBackgroundResource(R.mipmap.selected);
@@ -121,7 +121,7 @@ public class ItemAdapter extends BaseAdapter {
                 selectButton.setVisibility(View.VISIBLE);
             }
             if ((completedToolIds != null && completedToolIds.size() > 0 ) || (selectedToolNos != null && selectedToolNos.size()  > 0)) {
-                if (completedToolIds != null && completedToolIds.size() < 7 && completedToolIds.contains(position)) {
+                if (completedToolIds != null && completedToolIds.size() < 7 && completedToolIds.contains(position + 1)) {
                     selectButton.setVisibility(View.GONE);
                 } else if (selectedToolNos.contains(position)) {
                     selectButton.setBackgroundResource(R.mipmap.selected);
