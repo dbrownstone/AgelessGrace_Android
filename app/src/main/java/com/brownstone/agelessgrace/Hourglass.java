@@ -7,7 +7,6 @@ import android.os.Message;
 
 /**
  * Created by Ankush Grover(ankush.dev2@gmail.com) on 21/12/17.
- * modified by David Brownstone
  */
 
 
@@ -170,7 +169,7 @@ public abstract class Hourglass implements HourglassListener {
      */
     public long getRemainingTime() {
         if(isRunning) {
-            return (this.time - localTime);
+            return this.time;
         }
 
         return 0;
@@ -189,20 +188,5 @@ public abstract class Hourglass implements HourglassListener {
             if (intervalInMillis < 0)
                 intervalInMillis *= -1;
         this.interval = intervalInMillis;
-    }
-
-    public String RemainingTimeString() {
-        long seconds = (getRemainingTime())/1000;//convert to seconds
-        long minutes = seconds / 60;//convert to minutes
-
-        if(minutes > 0)//if we have minutes, then there might be some remainder seconds
-            seconds = seconds % 60;//seconds can be between 0-60, so we use the % operator to get the remainder
-        return minutes + ":" + formatNumber(seconds);
-    }
-
-    private String formatNumber(long value) {
-        if (value < 10)
-            return "0" + value;
-        return value + "";
     }
 }

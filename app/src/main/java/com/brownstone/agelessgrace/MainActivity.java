@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 if (toolsFragment.selectedToolSets.size() < 7) {
                     toolsFragment.show_music_icon = false;
                     showTheCongratulationsDialogs("All Tools");
-                    returnToToolsLayout();
+//                    returnToToolsLayout();
                 } else {
                     String key = "";
                     toolSelectionType = bundle.getString("selection_type");
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
     public void returnToToolsLayout() {
         toolsFragment.show_reselect_repeat_buttons = true;
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        TabLayout.Tab tab = tabLayout.getTabAt(0);
+        TabLayout.Tab tab = tabLayout.getTabAt(Constants.TOOLS);
         tab.select();
     }
 

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.CountDownTimer;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.media.MediaPlayer;
 import android.widget.Toast;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,9 +46,6 @@ import static com.brownstone.agelessgrace.BuildConfig.DEBUG;
 import static com.brownstone.agelessgrace.Constants.DAILY_EXERCISE_TIME;
 import static com.brownstone.agelessgrace.BuildConfig.BUILD_TYPE;
 
-import static java.lang.Math.PI;
-import static java.lang.Math.toIntExact;
-
 
 
 public class ExerciseActivity extends AppCompatActivity {
@@ -57,6 +56,7 @@ public class ExerciseActivity extends AppCompatActivity {
     Integer totalExercisePeriod =  DAILY_EXERCISE_TIME;
     Integer individualToolPeriod = (totalExercisePeriod) / 3;
     public static boolean active = false;
+    boolean restartExercise = false;
 
     int tool1Index, tool2Index, tool3Index, currentIndex;
     String tool1Name;
@@ -90,6 +90,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
     Hourglass hourglass;
 
+
     ToolFragment toolFragment;
     MainActivity mainActivity;
 
@@ -113,9 +114,9 @@ public class ExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-//        if (BuildConfig.BUILD_TYPE == "debug")
         if (DEBUG) {
-            totalExercisePeriod = DAILY_EXERCISE_TIME / 10;
+            totalExercisePeriod = DAILY_EXERCISE_TIME / 5;
+            individualToolPeriod = (totalExercisePeriod) / 3;
         }
 
         Resources res = getResources();
@@ -145,6 +146,9 @@ public class ExerciseActivity extends AppCompatActivity {
         tool3.setText(res.getString(R.string.formatted_tool_title, tool3Index, (res.getStringArray(R.array.tools))[tool3Index - 1]));
         songTitle = findViewById(R.id.song_title);
         currentIndex = 0;
+        // Notes about exercise times
+        // generally each exercise lasts for 1/3 of the total exercise period
+        // i.e. in release mode, each exercise lasts for 10/3 minutes - 3.333 mins
         if (selectedMusic.size() > 0) {
             firstSong = selectedMusic.get(0);
             currentSelection = firstSong;
@@ -154,6 +158,12 @@ public class ExerciseActivity extends AppCompatActivity {
             artist = findViewById(R.id.artist);
             artist.setText(firstSong.getArtist());
             durationInt = Integer.parseInt((firstSong.getDuration()));
+            if  (DEBUG) {
+                durationInt = individualToolPeriod;
+                restartExercise = false;
+            } else {
+                restartExercise = (durationInt < individualToolPeriod);
+            }
             timeRemaining = findViewById(R.id.song_time_remaining);
             timeRemaining.setText(formatSongTime(durationInt));
             recordCover = findViewById(R.id.imageView);
@@ -161,7 +171,7 @@ public class ExerciseActivity extends AppCompatActivity {
         } else {
             artist = findViewById(R.id.artist);
             artist.setText(" ");
-            durationInt = totalExercisePeriod / 3;
+            durationInt = individualToolPeriod;
             timeRemaining = findViewById(R.id.song_time_remaining);
             timeRemaining.setText(formatSongTime(durationInt));
             recordCover = findViewById(R.id.imageView);
@@ -169,32 +179,45 @@ public class ExerciseActivity extends AppCompatActivity {
         totalTimeRemainingTV = findViewById(R.id.total_time_remaining);
         totalTimeRemainingTV.setText(formatSongTime(totalExercisePeriod));
 
-        hourglass = new Hourglass(totalExercisePeriod, 1000) {
+        final int interval = 1000;
+        hourglass = new Hourglass(totalExercisePeriod) {
             @Override
-            public void onTimerTick(long remainingTime) {
-                totalTimeRemainingTV.setText(hourglass.RemainingTimeString());
-                individualToolPeriod -= 1000;
-                durationInt -= 1000;
-                //if tool has been completed
-                if (durationInt <= 0) {
-                    currentIndex += 1;
-                    individualToolPeriod = totalExercisePeriod/3;
-                    if (remainingTime >= 1000) {
+            public void onTimerTick(long theRemainingTime) {
+                remainingTime = theRemainingTime;
+                totalTimeRemainingTV.setText(RemainingTimeString(remainingTime));
+                durationInt -= interval;
+                individualToolPeriod -= interval;
+                //if a tool has been completed
+                if (durationInt <= 0 || individualToolPeriod == 0) {
+                    if (individualToolPeriod == interval && restartExercise) {
                         changeTools(currentIndex);
+                    } else {
+                        individualToolPeriod = (totalExercisePeriod) / 3;
+                        currentIndex += 1;
+                        if (currentIndex >= 3) {
+                            if (currentIndex == 3) stopTimer();
+                        } else {
+                            changeTools(currentIndex);
+                        }
                     }
                 } else {
-                    if (selectedMusic.size() > 0 && !mp.isPlaying()) {
+                    if (selectedMusic.size() > 0 && (mp != null && !mp.isPlaying())) {
                         mp.start();
-//                        MediaFileInfo theSong = firstSong;
                         switch (currentIndex) {
+                            case 0:
+                                currentSelection = firstSong;
+                                break;
+
                             case 1:
                                 currentSelection = secondSong;
                                 break;
+
                             case 2:
                                 currentSelection = thirdSong;
                                 break;
+
                         }
-                        durationInt = Integer.parseInt((currentSelection.getDuration()));
+//                        durationInt = Integer.parseInt((currentSelection.getDuration()));
                     }
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
@@ -202,13 +225,26 @@ public class ExerciseActivity extends AppCompatActivity {
 
             @Override
             public void onTimerFinish() {
-                if (selectedMusic.size() > 0 && !mp.isPlaying()) {
-                    mp.stop();
-                    mp.release();
-                }
+//                if (selectedMusic.size() > 0 ) {
+//                    if (mp != null && mp.isPlaying()) {
+//                        mp.stop();
+//                        mp.release();
+//                    }
+//                    stopTimer();
+//                }
                 returnToMainActivity();
             }
         };
+    }
+
+    public String RemainingTimeString(long remainingTime) {
+        long seconds = remainingTime/1000;//convert to seconds
+        long minutes = seconds / 60;//convert to minutes
+
+        if(minutes > 0)//if we have minutes, then there might be some remainder seconds
+            seconds = seconds % 60;//seconds can be between 0-60, so we use the % operator to get the remainder
+
+        return String.format("%d:%02d", minutes, seconds);
     }
 
     void returnToMainActivity() {
@@ -257,13 +293,12 @@ public class ExerciseActivity extends AppCompatActivity {
         String scrollingContent = "";
         if (pauseBetweenTools) {
             pauseSong();
-        } else {
-            if (selectedMusic.size() > 0 && mp.isPlaying()) {
-                mp.stop();
-            }
         }
         Resources res = getResources();
         String toolName = tool1Name + " ";
+        if (nextTool < 3 && (mp != null && mp.isPlaying())) {
+            mp.stop();
+        }
         switch (nextTool) {
             case 1:
                 if (selectedMusic.size() > 0) {
@@ -272,8 +307,14 @@ public class ExerciseActivity extends AppCompatActivity {
                     songTitle.setText(secondSong.getSongTitle());
                     artist.setText(secondSong.getArtist());
                     durationInt = Integer.parseInt((secondSong.getDuration()));
+                    if  (DEBUG) {
+                        durationInt = individualToolPeriod;
+                        restartExercise = false;
+                    } else {
+                        restartExercise = (durationInt < individualToolPeriod);
+                    }
                 } else {
-                    durationInt = totalExercisePeriod / 3;
+                    durationInt = individualToolPeriod;
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
                 tool2.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
@@ -283,14 +324,19 @@ public class ExerciseActivity extends AppCompatActivity {
                 break;
             case 2:
                 if (selectedMusic.size() > 0) {
-                    mp.stop();
                     mp = MediaPlayer.create(this, Uri.parse(thirdSong.getFilePath()));
                     recordCover.setImageBitmap(thirdSong.getBitmap());
                     songTitle.setText(thirdSong.getSongTitle());
                     artist.setText(thirdSong.getArtist());
                     durationInt = Integer.parseInt((thirdSong.getDuration()));
+                    if  (DEBUG) {
+                        durationInt = individualToolPeriod;
+                        restartExercise = false;
+                    } else {
+                        restartExercise = (durationInt < individualToolPeriod);
+                    }
                 } else {
-                    durationInt = totalExercisePeriod / 3;
+                    durationInt = individualToolPeriod;
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
                 tool3.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
@@ -303,6 +349,7 @@ public class ExerciseActivity extends AppCompatActivity {
             scrollingContent = res.getString(R.string.scrolling_content,toolName,bodyPartsText,waysToMoveText);
             scrollingText.setText(scrollingContent);
             scrollingText.setSelected(true);// starts the scroll
+            if (!restartExercise) nextToolSelected = true;
             playMusic();
         }
     }
@@ -365,7 +412,7 @@ public class ExerciseActivity extends AppCompatActivity {
             case R.id.pause_music:
                 pauseSong();
                 break;
-          default:
+            default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
@@ -387,12 +434,15 @@ public class ExerciseActivity extends AppCompatActivity {
         }
         getSupportActionBar().setTitle(theTitle);
         if (nextToolSelected) {
-            hourglass.stopTimer();
-            hourglass.setTime(remainingTime);//new Hourglass(remainingTime, 1000);
-            didStartCountDown = true;
-            hourglass.startTimer();
-            if (selectedMusic.size() > 0) {
-                mp.start();
+            if (currentIndex < 3) {
+                if (mp != null) {
+                    mp.start();
+                    hourglass.startTimer();
+                    scrollingText.setSelected(true);
+                }
+            } else {
+//                mp.stop();
+//                hourglass.stopTimer();
             }
         } else {
             Boolean isPaused = false;
@@ -415,7 +465,7 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void resume() {
-        hourglass.startTimer();
+//        hourglass.startTimer();
         if (mp != null) {
             mp.start();
             mp.seekTo(length);
@@ -429,7 +479,7 @@ public class ExerciseActivity extends AppCompatActivity {
             mp.pause();
             length = mp.getCurrentPosition();
         }
-        totalTimeRemainingTV.setText(hourglass.RemainingTimeString());
+        totalTimeRemainingTV.setText(RemainingTimeString(remainingTime));
         shouldPlayMusicItem = true;
         hourglass.pauseTimer();
         scrollingText.stopNestedScroll();

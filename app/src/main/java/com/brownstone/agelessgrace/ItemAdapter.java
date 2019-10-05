@@ -30,7 +30,7 @@ public class ItemAdapter extends BaseAdapter {
     ArrayList<String> selectedTools = new ArrayList<String>();
     ArrayList<String> selectedToolNos = new ArrayList<>();
     ArrayList<String> selectedToolSets;
-//    String[] selectedToolSets;
+    //    String[] selectedToolSets;
 //    Set<String> toolSet = new HashSet<String>();
     String toolSet = "";
     Map<String, Integer> currentSelections = new HashMap<String, Integer>();

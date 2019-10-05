@@ -1,6 +1,12 @@
 package com.brownstone.agelessgrace;
 
 final public class Constants {
+
+    // tab names
+    public static final int TOOLS = 0;
+    public static final int SETTINGS = 1;
+    public static final int ABOUT_AG = 2;
+
     //Exercise time set to 10 minutes
     public static final Integer DAILY_EXERCISE_TIME = 600000; //600000 =  10 mins;
 
