@@ -135,7 +135,10 @@ public class SharedPref {
         String[] idsStr = ids.split(",");
         ArrayList<Integer> arr = new ArrayList<Integer>();
         for(int i=0; i<idsStr.length; i++) {
-            arr.add(i,Integer.parseInt(idsStr[i]));
+            int thisId = Integer.parseInt(idsStr[i]);
+            if (!arr.contains(thisId)) {
+                arr.add(i, thisId);
+            }
         }
         return arr;
     }
@@ -148,14 +151,16 @@ public class SharedPref {
         }
         currentValue.addAll(value);
 
-
         StringBuilder sb = new StringBuilder();
         String delim = "";
+
         for (int i = 0; i < currentValue.size(); i++) {
             String s = String.valueOf(currentValue.get(i));
-            sb.append(delim);
-            sb.append(s);
-            delim = ",";
+            if (sb.indexOf(s) != -1) {
+                sb.append(delim);
+                sb.append(s);
+                delim = ",";
+            }
         }
         prefsEditor.putString(Constants.COMPLETED_TOOL_IDS, sb.toString()).apply();
         prefsEditor.commit();

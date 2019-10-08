@@ -29,6 +29,7 @@ import android.media.MediaPlayer;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -192,6 +193,14 @@ public class ExerciseActivity extends AppCompatActivity {
                     if (individualToolPeriod == interval && restartExercise) {
                         changeTools(currentIndex);
                     } else {
+                        if (mp != null) {
+                            mp.stop();
+                            try {
+                                mp.prepare();
+                            } catch (IOException e) {
+                                Log.e(TAG, "IOException during prepare after stop! mp value: " + mp);
+                            }
+                        }
                         individualToolPeriod = (totalExercisePeriod) / 3;
                         currentIndex += 1;
                         if (currentIndex >= 3) {
@@ -225,13 +234,6 @@ public class ExerciseActivity extends AppCompatActivity {
 
             @Override
             public void onTimerFinish() {
-//                if (selectedMusic.size() > 0 ) {
-//                    if (mp != null && mp.isPlaying()) {
-//                        mp.stop();
-//                        mp.release();
-//                    }
-//                    stopTimer();
-//                }
                 returnToMainActivity();
             }
         };
@@ -296,9 +298,9 @@ public class ExerciseActivity extends AppCompatActivity {
         }
         Resources res = getResources();
         String toolName = tool1Name + " ";
-        if (nextTool < 3 && (mp != null && mp.isPlaying())) {
-            mp.stop();
-        }
+//        if (nextTool < 3 && (mp != null && mp.isPlaying())) {
+//            mp.stop();
+//        }
         switch (nextTool) {
             case 1:
                 if (selectedMusic.size() > 0) {

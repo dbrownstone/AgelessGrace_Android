@@ -128,19 +128,19 @@ public class ToolFragment extends Fragment {
                         nextToolSet = selectedToolSets.get(completedToolSets.size());
                     }
                 } else {
-                    nextToolSet = selectedToolSets.get(completedToolSets.size() - 1);
+                    nextToolSet = selectedToolSets.get(completedToolSets.size());
                 }
             }
             setUpToolsToBeDisplayed(nextToolSet);
             if (completedToolSets != null && completedToolSets.size() != 0) {
-                whichDay = completedToolSets.size();
+                whichDay = completedToolSets.size() + 1;
             }
             selectTheAppropriateTitle(whichDay);
         } else {
             if (selectedToolSets.size() > 0 && (completedToolSets != null && completedToolSets.size() > 0)) {
-                nextToolSet = selectedToolSets.get(completedToolSets.size() - 1);
+                nextToolSet = selectedToolSets.get(completedToolSets.size());
                 setUpToolsToBeDisplayed(nextToolSet);
-                whichDay = completedToolSets.size();
+                whichDay = completedToolSets.size() + 1;
                 selectTheAppropriateTitle(whichDay);
             } else {
                 tools = allTools;
@@ -230,7 +230,6 @@ public class ToolFragment extends Fragment {
         lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
         completedToolIds = SharedPref.getCompletedToolIds();
         setupCompletedSets();
-//        selectedToolSets = SharedPref.getAllSelectedToolSets();
         selectedToolSets = SharedPref.getAllSelectedSets();
 
         pauseBetweenTools = !SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
@@ -435,7 +434,7 @@ public class ToolFragment extends Fragment {
         if (completedToolSets == null || completedToolSets.size() == 0) {
             selectedToolSet = selectedToolSets.get(0);
         } else  if (completedToolSets.size() < 7) {
-            selectedToolSet = selectedToolSets.get(completedToolSets.size() - 1);
+            selectedToolSet = selectedToolSets.get(completedToolSets.size());
         }
         if (selectedToolSet != "") {
             prepareToolForDisplay(selectedToolSet);
