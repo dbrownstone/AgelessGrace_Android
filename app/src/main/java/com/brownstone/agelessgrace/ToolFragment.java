@@ -137,7 +137,7 @@ public class ToolFragment extends Fragment {
             }
             selectTheAppropriateTitle(whichDay);
         } else {
-            if (selectedToolSets.size() > 0 && (completedToolSets != null && completedToolSets.size() > 0)) {
+            if (selectedToolSets.size() > 1 && (completedToolSets != null && completedToolSets.size() > 0)) {
                 nextToolSet = selectedToolSets.get(completedToolSets.size());
                 setUpToolsToBeDisplayed(nextToolSet);
                 whichDay = completedToolSets.size() + 1;
@@ -189,7 +189,7 @@ public class ToolFragment extends Fragment {
                 if (selectedToolSets.size() > 0 && tools.length % 3 == 0) {
                     show_commit_button = true;
                 } else {
-                    // allows selection of ttools mnaually, randomly(either adding to list of creating a list)
+                    // allows selection of tools manually, randomly(either adding to list of creating a list)
                     showSelectButtonOnly();
                 }
             }

@@ -99,6 +99,7 @@ public class SharedPref {
         SharedPreferences.Editor prefsEditor = mSharedPref.edit();
         StringBuilder sb = new StringBuilder();
         String delim = "";
+
         for (int i = 0; i < 3; i++) {
             String s = String.valueOf(toolIds.get(i));
             sb.append(delim);
@@ -106,6 +107,17 @@ public class SharedPref {
             delim = ",";
         }
         prefsEditor.putString(Constants.LAST_COMPLETED_TOOL_IDS, sb.toString()).apply();
+    }
+
+    public static void addToCompletedToolSets(String set) {
+        write(Constants.LAST_COMPLETED_TOOL_SET, set);
+        String sets = read(Constants.COMPLETED_TOOL_SETS,"");
+        if (sets.contains(",")) {
+            sets += " " + set;
+        } else {
+            sets += set;
+        }
+        write(Constants.COMPLETED_TOOL_SETS, sets);
     }
 
     public static void getLastCompletedToolSet() {

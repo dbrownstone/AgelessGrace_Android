@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     ToolFragment toolsFragment;
     static ExerciseActivity exercise;
     static Boolean resumeTheMusic = false;
+    boolean exerciseCompleted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
             if (bundle.getBoolean("from_exercise")) {
+                exerciseCompleted = true;
                 if (!bundle.getBoolean("repeating")) {
 //                    addToCompletedTools();
                     toolsFragment.repeating = false;
@@ -147,28 +149,28 @@ public class MainActivity extends AppCompatActivity {
                 SharedPref.saveToCompletedToolIds(Constants.COMPLETED_TOOL_IDS,completedToolsArray);
                 toolSelectionType = bundle.getString("selection_type");
                 toolsFragment.selectedToolSets = SharedPref.getAllSelectedToolSets();
-                if (toolsFragment.selectedToolSets.size() < 7) {
-                    toolsFragment.show_music_icon = false;
-                    showTheCongratulationsDialogs("All Tools");
-//                    returnToToolsLayout();
-                } else {
-                    String key = "";
-                    toolSelectionType = bundle.getString("selection_type");
-                    showTheCongratulationsDialogs(toolSelectionType);
-                    if (toolSelectionType.equals(getString(R.string.seventh_day_title))) {
-                        if (SharedPref.read(Constants.END_OF_FIRST_WEEK, false)) {
-                            if (SharedPref.read(Constants.END_OF_SECOND_WEEK, false)) {
-                                showTheCongratulationsDialogs("21 Days");
-                            } else {
-                                SharedPref.read(Constants.END_OF_SECOND_WEEK, true);
-                            }
-                        } else {
-                            SharedPref.write(Constants.END_OF_FIRST_WEEK, true);
-                        }
-                    }
-                    getSupportActionBar().setTitle(toolSelectionType);
+
+                StringBuilder sb = new StringBuilder();
+                String delim = "";
+
+                for (int i = 0; i < 3; i++) {
+                    String s = String.valueOf(completedToolsArray.get(i));
+                    sb.append(delim);
+                    sb.append(s);
+                    delim = ",";
                 }
+                SharedPref.addToCompletedToolSets(sb.toString());
+
             }
+        }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (exerciseCompleted) {
+            getSupportActionBar().setTitle(toolSelectionType);
+            exerciseCompleted = false;
         }
     }
 
@@ -182,39 +184,6 @@ public class MainActivity extends AppCompatActivity {
     void addToCompletedTools() {
         ArrayList<Integer> lastCompletedToolIds = SharedPref.getLastCompletedToolIds();
         SharedPref.saveToCompletedToolIds(Constants.COMPLETED_TOOL_IDS, lastCompletedToolIds);
-    }
-
-    void showTheCongratulationsDialogs(String toolSelectionType) {
-        String message = "";
-        if (toolSelectionType.equals(getString(R.string.seventh_day_title)) || toolSelectionType.equals(R.string.exercise_title)) {
-            message = getString(R.string.congrats_seven_day_completion);
-        } else if (toolSelectionType.equals("21 Days")) {
-            message = getString(R.string.congrats_twenty_one_days_completed);
-        } else {
-            String nextTime = "next time";
-            if (SharedPref.read(Constants.EXERCISE_DAILY, true)) nextTime = "tomorrow";
-            message = getString(R.string.congrats_ten_minute_completion, nextTime);
-        }
-        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
-        View view = inflater.inflate(R.layout.centered_image_alert, null);
-        alertDialog.setView(view);
-
-        TextView theMessage = (TextView) view.findViewById((R.id.alertMessage));
-        TextView title = (TextView) view.findViewById((R.id.alertTitle));
-        title.setText(R.string.congrats);
-        theMessage.setText(message);
-
-        alertDialog.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int which) {
-                        dialog.dismiss();
-                    }
-                });
-        alertDialog.show();
     }
 
 

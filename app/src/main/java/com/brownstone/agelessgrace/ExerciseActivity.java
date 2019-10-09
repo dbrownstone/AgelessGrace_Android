@@ -2,7 +2,6 @@ package com.brownstone.agelessgrace;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,10 +11,12 @@ import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -197,6 +198,7 @@ public class ExerciseActivity extends AppCompatActivity {
                             mp.stop();
                             try {
                                 mp.prepare();
+                                changeTools(currentIndex);
                             } catch (IOException e) {
                                 Log.e(TAG, "IOException during prepare after stop! mp value: " + mp);
                             }
@@ -211,7 +213,9 @@ public class ExerciseActivity extends AppCompatActivity {
                     }
                 } else {
                     if (selectedMusic.size() > 0 && (mp != null && !mp.isPlaying())) {
-                        mp.start();
+                        if (currentIndex < 3) {
+                            mp.start();
+                        }
                         switch (currentIndex) {
                             case 0:
                                 currentSelection = firstSong;
@@ -234,7 +238,8 @@ public class ExerciseActivity extends AppCompatActivity {
 
             @Override
             public void onTimerFinish() {
-                returnToMainActivity();
+
+
             }
         };
     }
@@ -243,8 +248,9 @@ public class ExerciseActivity extends AppCompatActivity {
         long seconds = remainingTime/1000;//convert to seconds
         long minutes = seconds / 60;//convert to minutes
 
-        if(minutes > 0)//if we have minutes, then there might be some remainder seconds
+        if(minutes > 0) { //if we have minutes, then there might be some remainder seconds
             seconds = seconds % 60;//seconds can be between 0-60, so we use the % operator to get the remainder
+        }
 
         return String.format("%d:%02d", minutes, seconds);
     }
@@ -278,11 +284,14 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     private String formatSongTime(Integer durationInt) {
-        return String.format(Locale.getDefault(),"%2d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(durationInt) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(durationInt)), // The change is in this line
-                TimeUnit.MILLISECONDS.toSeconds(durationInt) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationInt)));
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(durationInt) -
+                TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(durationInt));
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(durationInt) -
+                TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(durationInt));
+        if (seconds < 0) {
+            seconds = 0;
+        }
+        return String.format(Locale.getDefault(),"%2d:%02d",minutes, seconds); // The change is in this line);
     }
 
     private void changeTools(int nextTool) {
@@ -298,9 +307,10 @@ public class ExerciseActivity extends AppCompatActivity {
         }
         Resources res = getResources();
         String toolName = tool1Name + " ";
-//        if (nextTool < 3 && (mp != null && mp.isPlaying())) {
-//            mp.stop();
-//        }
+        if (nextTool < 3 && (mp != null && mp.isPlaying())) {
+            mp.stop();
+            mp.release();
+        }
         switch (nextTool) {
             case 1:
                 if (selectedMusic.size() > 0) {
@@ -309,7 +319,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     songTitle.setText(secondSong.getSongTitle());
                     artist.setText(secondSong.getArtist());
                     durationInt = Integer.parseInt((secondSong.getDuration()));
-                    if  (DEBUG) {
+                    if (DEBUG) {
                         durationInt = individualToolPeriod;
                         restartExercise = false;
                     } else {
@@ -319,7 +329,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     durationInt = individualToolPeriod;
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
-                tool2.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+                tool2.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
                 toolName = tool2Name + " ";
                 bodyPartsText = (res.getStringArray(R.array.body_parts_to_move)[tool2Index - 1]);
                 waysToMoveText = (res.getStringArray(R.array.ways_to_move_them)[tool2Index - 1]);
@@ -331,7 +341,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     songTitle.setText(thirdSong.getSongTitle());
                     artist.setText(thirdSong.getArtist());
                     durationInt = Integer.parseInt((thirdSong.getDuration()));
-                    if  (DEBUG) {
+                    if (DEBUG) {
                         durationInt = individualToolPeriod;
                         restartExercise = false;
                     } else {
@@ -341,10 +351,30 @@ public class ExerciseActivity extends AppCompatActivity {
                     durationInt = individualToolPeriod;
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
-                tool3.setTextColor(ContextCompat.getColor(this,R.color.colorAccent));
+                tool3.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
                 toolName = tool3Name + " ";
                 bodyPartsText = (res.getStringArray(R.array.body_parts_to_move)[tool3Index - 1]);
                 waysToMoveText = (res.getStringArray(R.array.ways_to_move_them)[tool3Index - 1]);
+                break;
+            case 3:
+                ArrayList<String> selectedToolSets = SharedPref.getAllSelectedToolSets();
+                if (selectedToolSets.size() < 7) {
+                    showTheCongratulationsDialogs("All Tools");
+                } else {
+                    String key = "";
+                    showTheCongratulationsDialogs(toolSelectionType);
+                    if (toolSelectionType.equals(getString(R.string.seventh_day_title))) {
+                        if (SharedPref.read(Constants.END_OF_FIRST_WEEK, false)) {
+                            if (SharedPref.read(Constants.END_OF_SECOND_WEEK, false)) {
+                                showTheCongratulationsDialogs("21 Days");
+                            } else {
+                                SharedPref.read(Constants.END_OF_SECOND_WEEK, true);
+                            }
+                        } else {
+                            SharedPref.write(Constants.END_OF_FIRST_WEEK, true);
+                        }
+                    }
+                }
                 break;
         }
         if (!pauseBetweenTools) {
@@ -442,9 +472,6 @@ public class ExerciseActivity extends AppCompatActivity {
                     hourglass.startTimer();
                     scrollingText.setSelected(true);
                 }
-            } else {
-//                mp.stop();
-//                hourglass.stopTimer();
             }
         } else {
             Boolean isPaused = false;
@@ -453,13 +480,11 @@ public class ExerciseActivity extends AppCompatActivity {
                 isPaused = !mp.isPlaying() && length > 1;
 
                 if (isPaused) return;
-            }
-            hourglass.startTimer();
-            if (selectedMusic.size() > 0) {
+
+                hourglass.startTimer();
                 mp.start();
             }
         }
-
     }
 
     public void pause() {
@@ -486,5 +511,39 @@ public class ExerciseActivity extends AppCompatActivity {
         hourglass.pauseTimer();
         scrollingText.stopNestedScroll();
         invalidateOptionsMenu();
+    }
+
+    void showTheCongratulationsDialogs(String toolSelectionType) {
+        String message = "";
+        if (toolSelectionType.equals(getString(R.string.seventh_day_title)) || toolSelectionType.equals(R.string.exercise_title)) {
+            message = getString(R.string.congrats_seven_day_completion);
+        } else if (toolSelectionType.equals("21 Days")) {
+            message = getString(R.string.congrats_twenty_one_days_completed);
+        } else {
+            String nextTime = "next time";
+            if (SharedPref.read(Constants.EXERCISE_DAILY, true)) nextTime = "tomorrow";
+            message = getString(R.string.congrats_ten_minute_completion, nextTime);
+        }
+        LayoutInflater inflater = this.getLayoutInflater();
+
+        android.support.v7.app.AlertDialog.Builder alertDialog = new AlertDialog.Builder(this,R.style.AlertDialogTheme);
+        View view = inflater.inflate(R.layout.centered_image_alert, null);
+        alertDialog.setView(view);
+
+        TextView theMessage = (TextView) view.findViewById((R.id.alertMessage));
+        TextView title = (TextView) view.findViewById((R.id.alertTitle));
+        title.setText(R.string.congrats);
+        theMessage.setText(message);
+
+        alertDialog.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int which) {
+                        dialog.dismiss();
+                        returnToMainActivity();
+                    }
+                });
+        alertDialog.show();
     }
 }
