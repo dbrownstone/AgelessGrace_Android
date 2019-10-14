@@ -67,7 +67,7 @@ public class ExerciseActivity extends AppCompatActivity {
     TextView scrollingText;
     String bodyPartsText;
     String waysToMoveText;
-    ArrayList<MediaFileInfo> selectedMusic = new ArrayList<MediaFileInfo>();
+    ArrayList<MediaFileInfo> selectedMusic = new ArrayList<>();
     MediaPlayer mp;
     String toolSelectionType = "";
     MediaFileInfo firstSong;
@@ -117,7 +117,7 @@ public class ExerciseActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (DEBUG) {
-            totalExercisePeriod = DAILY_EXERCISE_TIME / 5;
+            totalExercisePeriod = DAILY_EXERCISE_TIME / 10;
             individualToolPeriod = (totalExercisePeriod) / 3;
         }
 
@@ -263,7 +263,7 @@ public class ExerciseActivity extends AppCompatActivity {
             DateManager.setStartToEndDates();
         }
 
-        ArrayList<String> toolIds = new ArrayList<String>(3);
+        ArrayList<String> toolIds = new ArrayList<>(3);
         toolIds.add(String.valueOf(tool1Index));
         toolIds.add(String.valueOf(tool2Index));
         toolIds.add(String.valueOf(tool3Index));
@@ -515,7 +515,7 @@ public class ExerciseActivity extends AppCompatActivity {
 
     void showTheCongratulationsDialogs(String toolSelectionType) {
         String message = "";
-        if (toolSelectionType.equals(getString(R.string.seventh_day_title)) || toolSelectionType.equals(R.string.exercise_title)) {
+        if (toolSelectionType.equals(getString(R.string.seventh_day_title)) || toolSelectionType.equals(getString(R.string.exercise_title))) {
             message = getString(R.string.congrats_seven_day_completion);
         } else if (toolSelectionType.equals("21 Days")) {
             message = getString(R.string.congrats_twenty_one_days_completed);
@@ -530,8 +530,8 @@ public class ExerciseActivity extends AppCompatActivity {
         View view = inflater.inflate(R.layout.centered_image_alert, null);
         alertDialog.setView(view);
 
-        TextView theMessage = (TextView) view.findViewById((R.id.alertMessage));
-        TextView title = (TextView) view.findViewById((R.id.alertTitle));
+        TextView theMessage = view.findViewById((R.id.alertMessage));
+        TextView title = view.findViewById((R.id.alertTitle));
         title.setText(R.string.congrats);
         theMessage.setText(message);
 

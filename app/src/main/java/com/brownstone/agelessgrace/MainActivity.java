@@ -2,34 +2,18 @@ package com.brownstone.agelessgrace;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -133,14 +117,18 @@ public class MainActivity extends AppCompatActivity {
         if(bundle != null) {
             if (bundle.getBoolean("from_exercise")) {
                 exerciseCompleted = true;
-                if (!bundle.getBoolean("repeating")) {
-//                    addToCompletedTools();
-                    toolsFragment.repeating = false;
-                } else {
-                    toolsFragment.repeating = true;
-                }
+//                if (!bundle.getBoolean("repeating")) {
+                    toolsFragment.repeating = bundle.getBoolean("repeating");//false;
+//                } else {
+//                    toolsFragment.repeating = true;
+//                }
                 ArrayList<String> toolIds = bundle.getStringArrayList("tool_ids");
+                ArrayList<Integer>lastListing = new ArrayList<>();
+                lastListing.add(Integer.parseInt(toolIds.get(0)));
+                lastListing.add(Integer.parseInt(toolIds.get(1)));
+                lastListing.add(Integer.parseInt(toolIds.get(2)));
                 SharedPref.saveToSelectedToolIds(Constants.SELECTED_TOOL_IDS, toolIds);
+                SharedPref.saveLastCompletedToolIds(lastListing);
                 if (!completedToolsArray.contains(Integer.parseInt(toolIds.get(0)))) {
                     completedToolsArray.add(Integer.parseInt(toolIds.get(0)));
                     completedToolsArray.add(Integer.parseInt(toolIds.get(1)));

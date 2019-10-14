@@ -3,13 +3,8 @@ package com.brownstone.agelessgrace;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.util.ArraySet;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class SharedPref {
@@ -70,12 +65,14 @@ public class SharedPref {
     public static void writeSet(String key, Set<String> set) {
         SharedPreferences.Editor prefsEditor = mSharedPref.edit();
         prefsEditor.putStringSet(key, set);
+        prefsEditor.commit();
     }
     // read/write long
 
     public static void write(String key, long value) {
         SharedPreferences.Editor prefsEditor = mSharedPref.edit();
         prefsEditor.putLong(key, value).apply();
+        prefsEditor.commit();
     }
 
     public static long read(String key, long defValue) {
@@ -91,6 +88,7 @@ public class SharedPref {
     public static void write(String key, Integer value) {
         SharedPreferences.Editor prefsEditor = mSharedPref.edit();
         prefsEditor.putInt(key, value).apply();
+        prefsEditor.commit();
     }
 
     // Cpmpleted tool sets and ids
@@ -107,6 +105,7 @@ public class SharedPref {
             delim = ",";
         }
         prefsEditor.putString(Constants.LAST_COMPLETED_TOOL_IDS, sb.toString()).apply();
+        prefsEditor.commit();
     }
 
     public static void addToCompletedToolSets(String set) {
@@ -127,11 +126,11 @@ public class SharedPref {
 
     public static ArrayList<Integer> getLastCompletedToolIds() {
         String ids = read(Constants.LAST_COMPLETED_TOOL_IDS,"");
-        if (ids == "") {
+        if (ids.equals("")) {
             return null;
         }
         String[] idsStr = ids.split(",");
-        ArrayList<Integer> result = new ArrayList<Integer>();
+        ArrayList<Integer> result = new ArrayList<>();
         for(int i=0; i<3; i++) {
             result.add(i,Integer.parseInt(idsStr[i]));
         }
@@ -141,11 +140,11 @@ public class SharedPref {
 
     public static ArrayList<Integer> getCompletedToolIds() {
         String ids = read(Constants.COMPLETED_TOOL_IDS,"");
-        if (ids == "") {
+        if (ids.equals("")) {
             return null;
         }
         String[] idsStr = ids.split(",");
-        ArrayList<Integer> arr = new ArrayList<Integer>();
+        ArrayList<Integer> arr = new ArrayList<>();
         for(int i=0; i<idsStr.length; i++) {
             int thisId = Integer.parseInt(idsStr[i]);
             if (!arr.contains(thisId)) {
@@ -159,7 +158,7 @@ public class SharedPref {
         SharedPreferences.Editor prefsEditor = mSharedPref.edit();
         ArrayList<Integer> currentValue = getCompletedToolIds();
         if (currentValue == null) {
-            currentValue = new ArrayList<Integer>();
+            currentValue = new ArrayList<>();
         }
         currentValue.addAll(value);
 
@@ -168,7 +167,7 @@ public class SharedPref {
 
         for (int i = 0; i < currentValue.size(); i++) {
             String s = String.valueOf(currentValue.get(i));
-            if (sb.indexOf(s) != -1) {
+            if ((sb.length() == 0) || (sb.indexOf(s) == -1))   {
                 sb.append(delim);
                 sb.append(s);
                 delim = ",";
@@ -196,8 +195,8 @@ public class SharedPref {
 
     public static ArrayList<String> getSelectedToolIds() {
         String ids = read(Constants.SELECTED_TOOL_IDS,"");
-        if (ids == "") {
-            return new ArrayList<String>();
+        if (ids.equals("")) {
+            return new ArrayList<>();
         }
         String[] idsStr = ids.split(",");
         ArrayList<String> arr = new ArrayList<>();
@@ -236,13 +235,13 @@ public class SharedPref {
         // this gets  string of sets each separated by a space
         // example "1,2,3 0,4,5 6,7,9 8,10,11"
         // and creates an array of Strings ["1,2,3", "0,4,5", "6,7,9", "8,10,11"]
-        ArrayList<String> arr = new ArrayList<String>();
+        ArrayList<String> arr = new ArrayList<>();
 
         if (keyExists(Constants.SELECTED_TOOL_SETS)) {
             String ids = read(Constants.SELECTED_TOOL_SETS,"");
             String[] idsStr = ids.split(" ");
-            for (int i = 0; i < idsStr.length; i++) {
-                arr.add(idsStr[i]);
+            for (String s : idsStr) {
+                arr.add(s);
             }
         }
         return arr;

@@ -35,6 +35,7 @@ import static com.brownstone.agelessgrace.MusicSelectorActivity.isEmulator;
 public class ToolFragment extends Fragment {
 
     View thisView;
+    final ViewGroup nullParent = null;
 
     Boolean clear_all_buttons = false;
     Boolean show_refresh_button = false;
@@ -88,11 +89,10 @@ public class ToolFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         thisView = inflater.inflate(R.layout.tools_tab_fragment, container, false);
-
-        try {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.tools_title);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String theTitle = getString(R.string.tools_title);
+        AppCompatActivity theActivity = (AppCompatActivity) getActivity();
+        if ((theActivity.getSupportActionBar()) != null) {
+            theActivity.getSupportActionBar().setTitle(theTitle);
         }
         mainActivity = (MainActivity) getActivity();
         tools = getResources().getStringArray(R.array.tools);
@@ -137,10 +137,10 @@ public class ToolFragment extends Fragment {
             }
             selectTheAppropriateTitle(whichDay);
         } else {
-            if (selectedToolSets.size() > 1 && (completedToolSets != null && completedToolSets.size() > 0)) {
-                nextToolSet = selectedToolSets.get(completedToolSets.size());
+            if (selectedToolSets.size() > 0 && (completedToolSets != null && completedToolSets.size() > 0)) {
+                nextToolSet = selectedToolSets.get(completedToolSets.size() - 1);
                 setUpToolsToBeDisplayed(nextToolSet);
-                whichDay = completedToolSets.size() + 1;
+                whichDay = completedToolSets.size();
                 selectTheAppropriateTitle(whichDay);
             } else {
                 tools = allTools;
@@ -208,12 +208,9 @@ public class ToolFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Refresh fragment
-            try {
+            if (getFragmentManager() != null) {
                 getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+            }         }
     }
 
     Integer[] resetToolsArray() {
@@ -228,8 +225,11 @@ public class ToolFragment extends Fragment {
         String todaysDate = formatter.format(new Date());
         String completedDate = SharedPref.read("Date_of_last_exercise", "");
         lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
+        ArrayList<Integer> lastCompletedToolIds = SharedPref.getLastCompletedToolIds();
         completedToolIds = SharedPref.getCompletedToolIds();
-        setupCompletedSets();
+        if (completedToolIds != null && completedToolIds.size() > 0) {
+            setupCompletedSets();
+        }
         selectedToolSets = SharedPref.getAllSelectedSets();
 
         pauseBetweenTools = !SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
@@ -242,19 +242,17 @@ public class ToolFragment extends Fragment {
 
     void setupCompletedSets() {
         String aSet;
-        completedToolSets = new ArrayList<>();
-        if (completedToolIds == null) {
-            return;
-        }
-        for (int i = 0; i <  completedToolIds.size(); i += 3) {
-            aSet = completedToolIds.get(i) + "," + String.valueOf(completedToolIds.get(i + 1)) + "," + String.valueOf(completedToolIds.get(i + 2));
-            if (completedToolSets == null) {
-                completedToolSets = new ArrayList<>();
+        if (completedToolIds != null) {
+            completedToolSets = new ArrayList<>();
+            for (int i = 0; i < completedToolIds.size(); i += 3) {
+                aSet = completedToolIds.get(i) + "," + completedToolIds.get(i + 1) + "," + completedToolIds.get(i + 2);
+                if (completedToolSets == null) {
+                    completedToolSets = new ArrayList<>();
+                }
+                if (!completedToolSets.contains(aSet)) {
+                    completedToolSets.add(aSet);
+                }
             }
-            if (!completedToolSets.contains(aSet)) {
-                completedToolSets.add(aSet);
-            }
-            aSet = "";
         }
     }
 
@@ -339,12 +337,13 @@ public class ToolFragment extends Fragment {
                 lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
 
                 if ((exerciseDaily && !lastExerciseWasCompletedToday) || isEmulator())  {
-                    if (isEmulator()) {
-                        LayoutInflater inflater = this.getActivity().getLayoutInflater();
+                    if (isEmulator() && getContext() != null ) {
+                        LayoutInflater inflater;
+                        inflater = getActivity().getLayoutInflater();
 
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogTheme);
 
-                        View view = inflater.inflate(R.layout.centered_image_alert, null);
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
+                        View view = inflater.inflate(R.layout.centered_image_alert, nullParent);
                         alertDialog.setView(view);
 
                         alertDialog.setPositiveButton("OK",
@@ -370,22 +369,24 @@ public class ToolFragment extends Fragment {
                         continueToNextItem();
                     }
                 } else {
-                    LayoutInflater inflater = this.getActivity().getLayoutInflater();
+                    if (getContext() != null) {
+                        LayoutInflater inflater = getActivity().getLayoutInflater();
 
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogTheme);
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
 
-                    View view = inflater.inflate(R.layout.centered_image_alert, null);
-                    alertDialog.setView(view);
+                        View view = inflater.inflate(R.layout.centered_image_alert, nullParent);
+                        alertDialog.setView(view);
 
-                    alertDialog.setPositiveButton("OK",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
+                        alertDialog.setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog,
+                                                        int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        alertDialog.show();
+                    }
                     break;
                 }
                 break;
@@ -407,14 +408,16 @@ public class ToolFragment extends Fragment {
     }
 
     void completeSelection() {
-        if (completedToolSets.size() == 7) {
+        if (completedToolSets != null && completedToolSets.size() == 7) {
             completedToolSets = new ArrayList<>();
             completedToolIds = new ArrayList<>();
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.tools_title);
-            showSelectButtonOnly();
-            mainActivity.invalidateOptionsMenu();
-            itemAdapter = new ItemAdapter(this, tools, toolsNo,  descriptions, true);
-            toolList.setAdapter(itemAdapter);
+            if (getActivity() != null) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.tools_title));
+                showSelectButtonOnly();
+                mainActivity.invalidateOptionsMenu();
+                itemAdapter = new ItemAdapter(this, tools, toolsNo, descriptions, true);
+                toolList.setAdapter(itemAdapter);
+            }
         } else {
             int dayOfExercise = 1;
             if (completedToolSets != null) {
@@ -436,68 +439,72 @@ public class ToolFragment extends Fragment {
         } else  if (completedToolSets.size() < 7) {
             selectedToolSet = selectedToolSets.get(completedToolSets.size());
         }
-        if (selectedToolSet != "") {
+        if (!selectedToolSet.equals("")) {
             prepareToolForDisplay(selectedToolSet);
             completeSelection();
         } else {
             // have completed all 7 and not repeating the last one any lomger
             // therefore restart
-            selectedToolSets = new ArrayList<>();
-            itemAdapter.selectedToolSets = selectedToolSets;
-            SharedPref.remove(Constants.SELECTED_TOOL_SETS);
-            selectedTools = new ArrayList<>();
-            SharedPref.remove(Constants.SELECTED_TOOL_IDS);
-            itemAdapter.selectedToolNos = selectedTools;
-            completedToolSets = new ArrayList<>();
-            SharedPref.remove(Constants.COMPLETED_TOOL_SETS);
-            completedToolIds = new ArrayList<>();
-            itemAdapter.completedToolIds = completedToolIds;
-            SharedPref.remove(Constants.COMPLETED_TOOL_IDS);
-            tools = allTools;
-            toolsNo = resetToolsArray();
-            showSelectButtonOnly();
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.tools_title);
-            mainActivity.invalidateOptionsMenu();
-            itemAdapter = new ItemAdapter(this, tools, toolsNo,  descriptions, true);
-            toolList.setAdapter(itemAdapter);        }
+            if (getActivity() != null) {
+                selectedToolSets = new ArrayList<>();
+                itemAdapter.selectedToolSets = selectedToolSets;
+                SharedPref.remove(Constants.SELECTED_TOOL_SETS);
+                selectedTools = new ArrayList<>();
+                SharedPref.remove(Constants.SELECTED_TOOL_IDS);
+                itemAdapter.selectedToolNos = selectedTools;
+                completedToolSets = new ArrayList<>();
+                SharedPref.remove(Constants.COMPLETED_TOOL_SETS);
+                completedToolIds = new ArrayList<>();
+                itemAdapter.completedToolIds = completedToolIds;
+                SharedPref.remove(Constants.COMPLETED_TOOL_IDS);
+                tools = allTools;
+                toolsNo = resetToolsArray();
+                showSelectButtonOnly();
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.tools_title);
+                mainActivity.invalidateOptionsMenu();
+                itemAdapter = new ItemAdapter(this, tools, toolsNo, descriptions, true);
+                toolList.setAdapter(itemAdapter);
+            }}
     }
 
     void selectTheAppropriateTitle(Integer whichDay) {
-        String exercise_title = String.format(getResources().getString(R.string.exercise_title),whichDay);
-        if (!exerciseDaily) {
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(exercise_title);
-            toolSelectionType = exercise_title;
-            return;
-        }
-        switch (whichDay) {
-            case 1:
-                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.first_day_title);
-                toolSelectionType = String.valueOf(R.string.first_day_title);
-                break;
-            case 2:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.second_day_title);
-                toolSelectionType = String.valueOf(R.string.second_day_title);
-                break;
-            case 3:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.third_day_title);
-                toolSelectionType = String.valueOf(R.string.third_day_title);
-                break;
-            case 4:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fourth_day_title);
-                toolSelectionType = String.valueOf(R.string.fourth_day_title);
-                break;
-            case 5:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.fifth_day_title);
-                toolSelectionType = String.valueOf(R.string.fifth_day_title);
-                break;
-            case 6:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.sixth_day_title);
-                toolSelectionType = String.valueOf(R.string.sixth_day_title);
-                break;
-            case 7:
-                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(R.string.seventh_day_title);
-                toolSelectionType = String.valueOf(R.string.seventh_day_title);
-                break;
+        if (getActivity() != null){
+            String exercise_title = String.format(getResources().getString(R.string.exercise_title), whichDay);
+            if (!exerciseDaily) {
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(exercise_title);
+                toolSelectionType = exercise_title;
+                return;
+            }
+            switch (whichDay) {
+                case 1:
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.first_day_title));
+                    toolSelectionType = getString(R.string.first_day_title);
+                    break;
+                case 2:
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.second_day_title));
+                    toolSelectionType = getString(R.string.second_day_title);
+                    break;
+                case 3:
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.third_day_title));
+                    toolSelectionType = getString(R.string.third_day_title);
+                    break;
+                case 4:
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.fourth_day_title));
+                    toolSelectionType = getString(R.string.fourth_day_title);
+                    break;
+                case 5:
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.fifth_day_title));
+                    toolSelectionType = getString(R.string.fifth_day_title);
+                    break;
+                case 6:
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.sixth_day_title));
+                    toolSelectionType = getString(R.string.sixth_day_title);
+                    break;
+                case 7:
+                    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.seventh_day_title);
+                    toolSelectionType = getString(R.string.seventh_day_title);
+                    break;
+            }
         }
     }
 
@@ -506,7 +513,7 @@ public class ToolFragment extends Fragment {
         String[] allTools = getResources().getStringArray(R.array.tools);
         int i = 0;
         for (String aTool : tools) {
-            int pos = new ArrayList<String>(Arrays.asList(allTools)).indexOf(aTool);
+            int pos = new ArrayList<>(Arrays.asList(allTools)).indexOf(aTool);
             toolIds[i++] = pos;
         }
         return toolIds;
@@ -547,17 +554,19 @@ public class ToolFragment extends Fragment {
     }
 
     public void goToDescriptionView(String[] toolList, Integer[] toolNoList,int position) {
-        Intent showToolDescriptionActivity = new Intent(getActivity().getApplication(), ToolDescriptionActivity.class);
-        tools = toolList;
-        toolsNo = toolNoList;
-        if (tools.length == 3) {
-            theIndex = toolsNo[position];
-        } else {
-            theIndex = position;
+        if (getActivity() != null) {
+            Intent showToolDescriptionActivity = new Intent(getActivity().getApplication(), ToolDescriptionActivity.class);
+            tools = toolList;
+            toolsNo = toolNoList;
+            if (tools.length == 3) {
+                theIndex = toolsNo[position];
+            } else {
+                theIndex = position;
+            }
+            showToolDescriptionActivity.putExtra("theIndex", theIndex);
+            showToolDescriptionActivity.putStringArrayListExtra("selections", currentSelection);
+            startActivity(showToolDescriptionActivity);
         }
-        showToolDescriptionActivity.putExtra("theIndex", theIndex);
-        showToolDescriptionActivity.putStringArrayListExtra("selections", currentSelection);
-        startActivity(showToolDescriptionActivity);
     }
 
     void setRefresh() {
@@ -575,55 +584,56 @@ public class ToolFragment extends Fragment {
     public void showSelectAlert(ToolFragment aContext) {
         // setup the alert builder
         int numberOfToolsToSelectRandomly = 7 - selectedToolSets.size();
-        Context context = this.getContext();
-        LayoutInflater inflater = this.getActivity().getLayoutInflater();
+        if (getActivity() != null && getContext() != null) {
+            LayoutInflater inflater = this.getActivity().getLayoutInflater();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext(), R.style.AlertDialogTheme);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogTheme);
 
-        View view = inflater.inflate(R.layout.centered_image_alert, null);
+            View view = inflater.inflate(R.layout.centered_image_alert,nullParent);
 
-        builder.setView(view);
+            builder.setView(view);
 
-        TextView message = view.findViewById((R.id.alertMessage));
-        TextView title = view.findViewById((R.id.alertTitle));
-        if (selectedToolSets.size() > 0 && selectedToolSets.size() < 7) {
-            message.setText(String.format((getResources().getString(R.string.alert_select_more)), numberOfToolsToSelectRandomly));
-            builder.setPositiveButton(R.string.all,
+            TextView message = view.findViewById((R.id.alertMessage));
+            TextView title = view.findViewById((R.id.alertTitle));
+            if (selectedToolSets.size() > 0 && selectedToolSets.size() < 7) {
+                message.setText(String.format((getResources().getString(R.string.alert_select_more)), numberOfToolsToSelectRandomly));
+                builder.setPositiveButton(R.string.all,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                selectRandomToolSets(true);
+                            }
+                        });
+
+                builder.setNegativeButton(R.string.more,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                selectRandomToolSets(false);
+                            }
+                        });
+            } else {
+                message.setText(R.string.alert_select);
+                builder.setPositiveButton(R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                selectRandomToolSets(true);
+                            }
+                        });
+            }
+            title.setText(R.string.select_the_tools);
+
+            builder.setNeutralButton(R.string.action_cancel,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            selectRandomToolSets(true);
+                            dialog.cancel();
                         }
                     });
-
-            builder.setNegativeButton(R.string.more,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            selectRandomToolSets(false);
-                        }
-                    });
-        } else {
-            message.setText(R.string.alert_select);
-            builder.setPositiveButton(R.string.ok,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            selectRandomToolSets(true);
-                        }
-                    });
+            builder.create().show();
         }
-        title.setText(R.string.select_the_tools);
-
-        builder.setNeutralButton(R.string.action_cancel,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        builder.create().show();
     }
 
     void selectRandomToolSets(Boolean all) {
         ArrayList<Integer> randomNumbers = new ArrayList<>();
-        int randCnt = 21;
+        int randCnt;
         if (all) {
             selectedTools = new ArrayList<>();
             selectedToolSets = new ArrayList<>();
@@ -664,9 +674,9 @@ public class ToolFragment extends Fragment {
         }
         selectedToolSets = new ArrayList<>();
         for (int j = 0; j < 21; j = j + 3) {
-            selectedToolSets.add(String.valueOf(selectedTools.get(j)) + "," +
-                    String.valueOf(selectedTools.get(j + 1)) + "," +
-                    String.valueOf(selectedTools.get(j + 2)));
+            selectedToolSets.add(selectedTools.get(j) + "," +
+                    selectedTools.get(j + 1) + "," +
+                    selectedTools.get(j + 2));
         }
 
         String sets = TextUtils.join(" ", selectedToolSets);
@@ -699,16 +709,18 @@ public class ToolFragment extends Fragment {
     }
 
     public void selectMusicView() {
-        Intent selectMusicActivity = new Intent(getActivity().getApplication(), MusicSelectorActivity.class);
-        selectMusicActivity.putExtra("selectionType", toolSelectionType);
-        selectMusicActivity.putExtra("tool1Name", tools[0]);
-        selectMusicActivity.putExtra("tool2Name", tools[1]);
-        selectMusicActivity.putExtra("tool3Name", tools[2]);
-        selectMusicActivity.putExtra("tool1Index", toolsNo[0]);
-        selectMusicActivity.putExtra("tool2Index", toolsNo[1]);
-        selectMusicActivity.putExtra("tool3Index", toolsNo[2]);
-        selectMusicActivity.putExtra("repeating", repeating);
-        repeating = false;
-        startActivity(selectMusicActivity);
+        if (getActivity() != null) {
+            Intent selectMusicActivity = new Intent(getActivity().getApplication(), MusicSelectorActivity.class);
+            selectMusicActivity.putExtra("selectionType", toolSelectionType);
+            selectMusicActivity.putExtra("tool1Name", tools[0]);
+            selectMusicActivity.putExtra("tool2Name", tools[1]);
+            selectMusicActivity.putExtra("tool3Name", tools[2]);
+            selectMusicActivity.putExtra("tool1Index", toolsNo[0]);
+            selectMusicActivity.putExtra("tool2Index", toolsNo[1]);
+            selectMusicActivity.putExtra("tool3Index", toolsNo[2]);
+            selectMusicActivity.putExtra("repeating", repeating);
+            repeating = false;
+            startActivity(selectMusicActivity);
+        }
     }
 }
