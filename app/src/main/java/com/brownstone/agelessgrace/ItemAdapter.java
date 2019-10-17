@@ -23,16 +23,16 @@ import java.util.Set;
 
 public class ItemAdapter extends BaseAdapter {
 
-    LayoutInflater mInflater;
-    String[] adapterTools;
-    Integer[] adapterToolNos = new Integer[3];
-    ArrayList<Integer> completedToolIds = SharedPref.getCompletedToolIds();
-    ArrayList<String> selectedTools = new ArrayList<String>();
+    private LayoutInflater mInflater;
+    private String[] adapterTools;
+    private Integer[] adapterToolNos;// = new Integer[3];
+    ArrayList<Integer> completedToolIds;// = SharedPref.getCompletedToolIds();
+    private ArrayList<String> selectedTools;
     ArrayList<String> selectedToolNos = new ArrayList<>();
     ArrayList<String> selectedToolSets;
     //    String[] selectedToolSets;
 //    Set<String> toolSet = new HashSet<String>();
-    String toolSet = "";
+    private String toolSet = "";
     Map<String, Integer> currentSelections = new HashMap<String, Integer>();
 
     Integer numberOfChoices;
@@ -63,6 +63,7 @@ public class ItemAdapter extends BaseAdapter {
         numberOfChoices = 0;
         resetState = reset;
         mInflater = context.getActivity().getLayoutInflater();//(LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        selectedTools = new ArrayList<String>();
     }
 
     @Override
@@ -98,7 +99,7 @@ public class ItemAdapter extends BaseAdapter {
                 context.goToDescriptionView(adapterTools, adapterToolNos, index);
             }});
 
-        int i = position;
+//        int i = position;
         int pos = new ArrayList<String>(Arrays.asList(context.allTools)).indexOf(adapterTools[position]);
         String name = String.format("Tool #%d: %s", pos + 1, adapterTools[position]);
         String desc = descriptions[position];
@@ -123,7 +124,7 @@ public class ItemAdapter extends BaseAdapter {
             if ((completedToolIds != null && completedToolIds.size() > 0 ) || (selectedToolNos != null && selectedToolNos.size()  > 0)) {
                 if (completedToolIds != null && completedToolIds.size() < 7 && completedToolIds.contains(position + 1)) {
                     selectButton.setVisibility(View.GONE);
-                } else if (selectedToolNos.contains(position)) {
+                } else if (selectedToolNos.contains(String.valueOf(position))) {
                     selectButton.setBackgroundResource(R.mipmap.selected);
                 }
                 if (completedToolIds == null || completedToolIds.size() == 7) {
@@ -135,9 +136,6 @@ public class ItemAdapter extends BaseAdapter {
             } else if (resetState) {
                 context.showSelectButtonOnly();
                 resetState = false;
-            }
-            if (numberOfChoices == 0) {
-                toolSet = "";
             }
 
             selectButton.setOnClickListener(new View.OnClickListener() {
