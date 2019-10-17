@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -99,12 +101,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
@@ -112,16 +118,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume(){
+        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
         super.onResume();
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
             if (bundle.getBoolean("from_exercise")) {
                 exerciseCompleted = true;
-//                if (!bundle.getBoolean("repeating")) {
-                    toolsFragment.repeating = bundle.getBoolean("repeating");//false;
-//                } else {
-//                    toolsFragment.repeating = true;
-//                }
+                toolsFragment.repeating = bundle.getBoolean("repeating");
                 ArrayList<String> toolIds = bundle.getStringArrayList("tool_ids");
                 ArrayList<Integer>lastListing = new ArrayList<>();
                 lastListing.add(Integer.parseInt(toolIds.get(0)));
@@ -155,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPostResume() {
+        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
         super.onPostResume();
         if (exerciseCompleted) {
             getSupportActionBar().setTitle(toolSelectionType);
@@ -163,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void returnToToolsLayout() {
+        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
         toolsFragment.show_reselect_repeat_buttons = true;
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         TabLayout.Tab tab = tabLayout.getTabAt(Constants.TOOLS);
@@ -170,6 +178,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void addToCompletedTools() {
+        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
         ArrayList<Integer> lastCompletedToolIds = SharedPref.getLastCompletedToolIds();
         SharedPref.saveToCompletedToolIds(Constants.COMPLETED_TOOL_IDS, lastCompletedToolIds);
     }
@@ -188,13 +198,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onActivityStarted(Activity activity) {
-            Log.i(activity.getClass().getSimpleName(), "onStop()");
+            String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+            Log.i(activity.getClass().getSimpleName(), nameofCurrMethod + "()");
         }
 
         @Override
         public void onActivityResumed(Activity activity) {
-            Log.i(activity.getClass().getSimpleName(), "onResume()");
             String className = activity.getClass().getSimpleName();
+            String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+            Log.i(className, nameofCurrMethod + "()");
             if (className.equals("ExerciseActivity") ) {
                 if (exercise != null && resumeTheMusic) {
 //                    resumeTheMusic = false;
@@ -205,8 +217,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onActivityPaused(Activity activity) {
-            Log.i(activity.getClass().getSimpleName(), "onPause()");
             String className = activity.getClass().getSimpleName();
+            String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
             if (className.equals("ExerciseActivity")) {
                 if (exercise != null && !exercise.allCompleted) {
                     resumeTheMusic = true;

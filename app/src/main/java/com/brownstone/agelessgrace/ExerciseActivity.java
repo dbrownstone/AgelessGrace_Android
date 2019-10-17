@@ -129,12 +129,12 @@ public class ExerciseActivity extends AppCompatActivity {
         pauseBetweenTools = SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
         Bundle bundle = getIntent().getExtras();
         toolSelectionType = bundle.getString("selectionType");
-        tool1Index = bundle.getInt("tool1Index") + 1;
-        tool2Index = bundle.getInt("tool2Index") + 1;
-        tool3Index = bundle.getInt("tool3Index") + 1;
-        tool1Name = (res.getStringArray(R.array.tools))[tool1Index - 1];
-        tool2Name = (res.getStringArray(R.array.tools))[tool2Index - 1];
-        tool3Name = (res.getStringArray(R.array.tools))[tool3Index - 1];
+        tool1Index = bundle.getInt("tool1Index");
+        tool2Index = bundle.getInt("tool2Index");
+        tool3Index = bundle.getInt("tool3Index");
+        tool1Name = (res.getStringArray(R.array.tools))[tool1Index];
+        tool2Name = (res.getStringArray(R.array.tools))[tool2Index];
+        tool3Name = (res.getStringArray(R.array.tools))[tool3Index];
         selectedMusic = MusicSelectorActivity.getData();
 
         scrollingText = findViewById(R.id.scrollingTextView);
