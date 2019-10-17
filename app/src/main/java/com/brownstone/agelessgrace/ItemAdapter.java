@@ -149,13 +149,17 @@ public class ItemAdapter extends BaseAdapter {
                         v.setBackgroundResource(R.mipmap.selector);
                         selectedToolNos.remove(String.valueOf(toolNo));
                         toolCount -= 1;
-                        context.showSelectButtonOnly();
+                        if (toolCount % 3 != 0) {
+                            context.showSelectButtonOnly();
+                        }
                     } else {
                         //add this selection
                         v.setBackgroundResource(R.mipmap.selected);
                         selectedToolNos.add(String.valueOf(toolNo));
                         toolCount++;
-                        context.showSelectButtonOnly();
+                        if (toolCount % 3 != 0) {
+                            context.showSelectButtonOnly();
+                        }
                     }
                     if (toolCount > 0 && toolCount % 3 == 0) {
                         toolSet = "";
