@@ -3,6 +3,7 @@ package com.brownstone.agelessgrace;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +24,15 @@ import java.util.Set;
 
 public class ItemAdapter extends BaseAdapter {
 
+    String FTAG = "ItemAdapter()";
+
     LayoutInflater mInflater;
-    String[] adapterTools;
+    String[] adapterToolNames;
     Integer[] adapterToolNos = new Integer[3];
     ArrayList<Integer> completedToolIds = SharedPref.getCompletedToolIds();
     ArrayList<String> selectedTools = new ArrayList<String>();
     ArrayList<String> selectedToolNos = new ArrayList<>();
     ArrayList<String> selectedToolSets;
-    //    String[] selectedToolSets;
-//    Set<String> toolSet = new HashSet<String>();
     String toolSet = "";
     Map<String, Integer> currentSelections = new HashMap<String, Integer>();
 
@@ -42,7 +43,9 @@ public class ItemAdapter extends BaseAdapter {
     Boolean resetState = false;
 
 
-    public ItemAdapter(ToolFragment context, String[] i, Integer[] ids, String[] d, Boolean reset) {
+    public ItemAdapter(ToolFragment context, String[] toolNamesToDisplay, Integer[] ids, String[] d, Boolean reset) {
+        MainActivity.displayProcedureName(FTAG);
+
         completedToolIds = context.completedToolIds;
         selectedToolSets = context.selectedToolSets;
         selectedToolNos = new ArrayList<>();
@@ -55,7 +58,7 @@ public class ItemAdapter extends BaseAdapter {
         }
 
         int l = 0;
-        adapterTools = i;
+        adapterToolNames = toolNamesToDisplay;
         Integer j = 0;
         adapterToolNos = ids;
         descriptions = d;
@@ -67,21 +70,29 @@ public class ItemAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return adapterTools.length;
+        MainActivity.displayProcedureName(FTAG);
+
+        return adapterToolNames.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return adapterTools[position];
+        MainActivity.displayProcedureName(FTAG);
+
+
+        return adapterToolNames[position];
     }
 
     @Override
     public long getItemId(int position) {
+        MainActivity.displayProcedureName(FTAG);
         return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        MainActivity.displayProcedureName(FTAG);
+
         final Integer index = position;
         View v = mInflater.inflate(R.layout.row_item,null);
         TextView nameTextView = v.findViewById(R.id.nameTextView);
@@ -95,12 +106,12 @@ public class ItemAdapter extends BaseAdapter {
         forwardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.goToDescriptionView(adapterTools, adapterToolNos, index);
+                context.goToDescriptionView(adapterToolNames, adapterToolNos, index);
             }});
 
         int i = position;
-        int pos = new ArrayList<String>(Arrays.asList(context.allTools)).indexOf(adapterTools[position]);
-        String name = String.format("Tool #%d: %s", pos + 1, adapterTools[position]);
+        int pos = new ArrayList<String>(Arrays.asList(context.allTools)).indexOf(adapterToolNames[position]);
+        String name = String.format("Tool #%d: %s", pos + 1, adapterToolNames[position]);
         String desc = descriptions[position];
         final Integer toolNo = position;
 
@@ -110,25 +121,17 @@ public class ItemAdapter extends BaseAdapter {
         if (selectedToolNos == null) {
             selectedToolNos = new ArrayList<>();
         }
-        if (adapterTools.length > 3) {
-            if (selectedToolNos != null && selectedToolNos.contains(String.valueOf(position))) {
-                if (completedToolIds != null && completedToolIds.contains(position + 1)) {
-                    selectButton.setVisibility(View.INVISIBLE);
-                } else{
+
+        if (adapterToolNames.length > 3) {
+            if (selectedToolNos.size() > 0 && selectedToolNos.contains(String.valueOf(position))) {
+                if (completedToolIds != null && completedToolIds.contains(position)) {
+                    selectButton.setVisibility(View.GONE);
+                } else {
                     selectButton.setBackgroundResource(R.mipmap.selected);
                 }
             } else {
                 selectButton.setVisibility(View.VISIBLE);
-            }
-            if ((completedToolIds != null && completedToolIds.size() > 0 ) || (selectedToolNos != null && selectedToolNos.size()  > 0)) {
-                if (completedToolIds != null && completedToolIds.size() < 7 && completedToolIds.contains(position + 1)) {
-                    selectButton.setVisibility(View.GONE);
-                } else if (selectedToolNos.contains(position)) {
-                    selectButton.setBackgroundResource(R.mipmap.selected);
-                }
-                if (completedToolIds == null || completedToolIds.size() == 7) {
-                    completedToolIds = new ArrayList<Integer>();
-                }
+                selectButton.setBackgroundResource(R.mipmap.selector);
             }
             if (completedToolIds != null && this.selectedTools.size() >= completedToolIds.size() + 3) {
                 context.showContinueButton();
@@ -149,13 +152,17 @@ public class ItemAdapter extends BaseAdapter {
                         v.setBackgroundResource(R.mipmap.selector);
                         selectedToolNos.remove(String.valueOf(toolNo));
                         toolCount -= 1;
-                        context.showSelectButtonOnly();
+                        if (toolCount % 3 != 0) {
+                            context.showSelectButtonOnly();
+                        }
                     } else {
                         //add this selection
                         v.setBackgroundResource(R.mipmap.selected);
                         selectedToolNos.add(String.valueOf(toolNo));
                         toolCount++;
-                        context.showSelectButtonOnly();
+                        if (toolCount % 3 != 0) {
+                            context.showSelectButtonOnly();
+                        }
                     }
                     if (toolCount > 0 && toolCount % 3 == 0) {
                         toolSet = "";
@@ -190,8 +197,10 @@ public class ItemAdapter extends BaseAdapter {
     }
 
     public void updateData(String[] tools, Integer[] toolNos) {
+        MainActivity.displayProcedureName(FTAG);
+
         adapterToolNos = toolNos;
-        adapterTools = tools;
+        adapterToolNames = tools;
 
         notifyDataSetChanged();
     }

@@ -36,7 +36,7 @@ import static com.brownstone.agelessgrace.MusicSelectorActivity.isEmulator;
 
 public class ToolFragment extends Fragment {
 
-    String FTAG = "ToolFragment";
+    String FTAG = "ToolFragment()";
     View thisView;
     final ViewGroup nullParent = null;
 
@@ -57,7 +57,6 @@ public class ToolFragment extends Fragment {
     String[] allTools;
     Integer[] toolsNo = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
     ArrayList<String>  selectedToolSets;
-    String  selectedSets;
     ArrayList<String> selectedTools;
     ArrayList<String> completedToolSets;
     String completedSets;
@@ -92,8 +91,8 @@ public class ToolFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         thisView = inflater.inflate(R.layout.tools_tab_fragment, container, false);
         String theTitle = getString(R.string.tools_title);
         AppCompatActivity theActivity = (AppCompatActivity) getActivity();
@@ -162,19 +161,12 @@ public class ToolFragment extends Fragment {
 
 
     void setUpToolsToBeDisplayed(String nextToolSet) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
 
         tools = new String[3];
         toolsNo = new Integer[3];
         String[] toolIds = nextToolSet.split(",");
         List<String> toolIdsList = Arrays.asList(toolIds);
-//        int k = 0;
-//        for (int j = toolIdsList.size() - 1; j >= 0; j--) {
-//            Integer toolId = Integer.parseInt(toolIds[j]);
-//            tools[k] = allTools[toolId];
-//            toolsNo[k++] = toolId;
-//        }
         for (int j = 0; j < toolIdsList.size(); j++) {
             Integer toolId = Integer.parseInt(toolIds[j]);
             tools[j] = allTools[toolId];
@@ -183,8 +175,8 @@ public class ToolFragment extends Fragment {
     }
 
     void displayTheAppropriateButtons(Integer displayedToolsCount) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         show_music_icon = false;
         show_commit_button = false;
         show_continue_button = false;
@@ -222,8 +214,8 @@ public class ToolFragment extends Fragment {
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Refresh fragment
@@ -234,27 +226,27 @@ public class ToolFragment extends Fragment {
     }
 
     Integer[] resetToolsArray() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         Integer[] array = new Integer[21];
         for (int i = 0; i < 21; i++) array[i] = i;
         return array;
     }
 
     void getSharedPreferences() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         SimpleDateFormat formatter;
         formatter = new SimpleDateFormat("yyyyMMdd");
         String todaysDate = formatter.format(new Date());
         String completedDate = SharedPref.read("Date_of_last_exercise", "");
         lastExerciseWasCompletedToday = (completedDate.equals(todaysDate));
-        ArrayList<Integer> lastCompletedToolIds = SharedPref.getLastCompletedToolIds();
+        lastCompletedToolIds = SharedPref.getLastCompletedToolIds();
         completedToolIds = SharedPref.getCompletedToolIds();
+        selectedToolSets = SharedPref.getAllSelectedSets();
         if (completedToolIds != null && completedToolIds.size() > 0) {
             setupCompletedSets();
         }
-        selectedToolSets = SharedPref.getAllSelectedSets();
 
         pauseBetweenTools = !SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
         exercise_automatically = SharedPref.read(Constants.START_EXERCISE_IMMEDIATELY, false);
@@ -265,8 +257,8 @@ public class ToolFragment extends Fragment {
     }
 
     void setupCompletedSets() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         String aSet;
         if (completedToolIds != null) {
             completedToolSets = new ArrayList<>();
@@ -284,8 +276,8 @@ public class ToolFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_tool_fragment, menu);
         menu.findItem(R.id.action_select).setVisible(false);
@@ -319,8 +311,8 @@ public class ToolFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         int id = item.getItemId();
         switch (id) {
             case R.id.action_select:
@@ -426,8 +418,8 @@ public class ToolFragment extends Fragment {
     }
 
     void prepareToolForDisplay(String toolSet) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         String[] idsStr = toolSet.split(",");
         toolsNo = new Integer[3];
         tools = new String[3];
@@ -440,8 +432,8 @@ public class ToolFragment extends Fragment {
     }
 
     void completeSelection() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         if (completedToolSets != null && completedToolSets.size() == 7) {
             completedToolSets = new ArrayList<>();
             completedToolIds = new ArrayList<>();
@@ -465,8 +457,8 @@ public class ToolFragment extends Fragment {
     }
 
     void continueToNextItem() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         String selectedToolSet;
         show_continue_button = false;
         selectedToolSet = "";
@@ -504,8 +496,8 @@ public class ToolFragment extends Fragment {
     }
 
     void selectTheAppropriateTitle(Integer whichDay) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         if (getActivity() != null){
             String exercise_title = String.format(getResources().getString(R.string.exercise_title), whichDay);
             if (!exerciseDaily) {
@@ -547,8 +539,8 @@ public class ToolFragment extends Fragment {
     }
 
     Integer[] getSelectedToolNos() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         Integer[] toolIds = new Integer[3];
         String[] allTools = getResources().getStringArray(R.array.tools);
         int i = 0;
@@ -560,29 +552,29 @@ public class ToolFragment extends Fragment {
     }
 
     void addToCurrentlySelectedTools(String toolName, Integer whichOne) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         currentSelection.add(toolName);
         currentSelectionIds.add(whichOne);
     }
 
     void removeFromCurrentlySelectedTools(String toolName, Integer whichOne) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         currentSelection.remove(toolName);
         currentSelectionIds.remove(Integer.valueOf(whichOne));
     }
 
     public void showCommitButton() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         show_commit_button = true;
         mainActivity.invalidateOptionsMenu();
     }
 
     public void showContinueButton() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         if (lastExerciseWasCompletedToday && exerciseDaily) {
             setRefresh();
         } else {
@@ -592,8 +584,8 @@ public class ToolFragment extends Fragment {
     }
 
     public void showSelectButtonOnly() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         show_select_button = true;
         show_music_icon = false;
         show_commit_button = false;
@@ -604,8 +596,8 @@ public class ToolFragment extends Fragment {
     }
 
     public void goToDescriptionView(String[] toolList, Integer[] toolNoList,int position) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         if (getActivity() != null) {
             Intent showToolDescriptionActivity = new Intent(getActivity().getApplication(), ToolDescriptionActivity.class);
             tools = toolList;
@@ -622,25 +614,24 @@ public class ToolFragment extends Fragment {
     }
 
     void setRefresh() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         show_music_icon = false;
         show_refresh_button = true;
         this.mainActivity.invalidateOptionsMenu();
     }
 
     void setRepeat() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         show_repeat_button = true;
         show_select_button = true;
         this.mainActivity.invalidateOptionsMenu();
     }
 
     public void showSelectAlert(ToolFragment aContext) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
-        Log.i(FTAG,"showSelectAlert");
+        MainActivity.displayProcedureName(FTAG);
+
         // setup the alert builder
         int numberOfToolsToSelectRandomly = 7 - selectedToolSets.size();
         if (getActivity() != null && getContext() != null) {
@@ -691,8 +682,8 @@ public class ToolFragment extends Fragment {
     }
 
     void selectRandomToolSets(Boolean all) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         ArrayList<Integer> randomNumbers = new ArrayList<>();
         int randCnt;
         if (all) {
@@ -701,7 +692,7 @@ public class ToolFragment extends Fragment {
             completedToolSets = new ArrayList<>();
             SharedPref.remove(Constants.SELECTED_TOOL_IDS);
         } else {
-            if (selectedToolSets.size() > 0 && selectedTools.size() == 0) {
+            if (selectedToolSets.size() > 0 && selectedTools.size() % 3 == 0) {
                 selectedTools = new ArrayList<>(selectedToolSets.size() * 3);
                 for (int i = 0; i < selectedToolSets.size(); i++) {
                     String toolSet = selectedToolSets.get(i);
@@ -748,8 +739,8 @@ public class ToolFragment extends Fragment {
     }
 
     void prepareDisplay() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         String nextToolSet;
         if (completedToolSets == null || completedToolSets.size() == 0) {
             selectTheAppropriateTitle(1);
@@ -772,8 +763,8 @@ public class ToolFragment extends Fragment {
     }
 
     public void selectMusicView() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(FTAG,nameofCurrMethod);
+        MainActivity.displayProcedureName(FTAG);
+
         if (getActivity() != null) {
             Intent selectMusicActivity = new Intent(getActivity().getApplication(), MusicSelectorActivity.class);
             selectMusicActivity.putExtra("selectionType", toolSelectionType);

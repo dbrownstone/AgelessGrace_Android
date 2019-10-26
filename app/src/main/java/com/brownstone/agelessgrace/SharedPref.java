@@ -167,11 +167,12 @@ public class SharedPref {
 
         for (int i = 0; i < currentValue.size(); i++) {
             String s = String.valueOf(currentValue.get(i));
-            if ((sb.length() == 0) || (sb.indexOf(s) == -1))   {
+//            if ((sb.length() == 0) || (sb.indexOf(s) == -1))   {
+            if (sb.length() > 0) {
                 sb.append(delim);
-                sb.append(s);
-                delim = ",";
             }
+            sb.append(s);
+            delim = ",";
         }
         prefsEditor.putString(Constants.COMPLETED_TOOL_IDS, sb.toString()).apply();
         prefsEditor.commit();
@@ -214,10 +215,14 @@ public class SharedPref {
             currentValue = value;
         } else {
             currentValue = getSelectedToolIds();
-            if (currentValue == null) {
-                currentValue = new ArrayList<>();
+            if (currentValue.size() < 21) {
+                if (currentValue == null) {
+                    currentValue = new ArrayList<>();
+                }
+                currentValue.addAll(value);
+            } else {
+                return;
             }
-            currentValue.addAll(value);
         }
         StringBuilder sb = new StringBuilder();
         String delim = "";
@@ -239,10 +244,12 @@ public class SharedPref {
 
         if (keyExists(Constants.SELECTED_TOOL_SETS)) {
             String ids = read(Constants.SELECTED_TOOL_SETS,"");
-            String[] idsStr = ids.split(" ");
-            for (String s : idsStr) {
-                arr.add(s);
-            }
+//            if (ids.length() < 21) {
+                String[] idsStr = ids.split(" ");
+                for (String s : idsStr) {
+                    arr.add(s);
+                }
+//            }
         }
         return arr;
     }

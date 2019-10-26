@@ -15,8 +15,12 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
+import static com.brownstone.agelessgrace.BuildConfig.DEBUG;
+
 
 public class MainActivity extends AppCompatActivity {
+
+    String FTAG = "Main Activity()";
 
     private final AppLifecycleCallbacks mCallbacks = new AppLifecycleCallbacks();
 
@@ -37,10 +41,17 @@ public class MainActivity extends AppCompatActivity {
     static Boolean resumeTheMusic = false;
     boolean exerciseCompleted = false;
 
+    public static void displayProcedureName(String FTAG) {
+        if (DEBUG) {
+            String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
+            Log.i(FTAG, nameofCurrMethod);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
+        displayProcedureName(FTAG);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -101,16 +112,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
+        displayProcedureName(FTAG);
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
+        displayProcedureName(FTAG);
+
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
@@ -118,8 +129,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume(){
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
+        displayProcedureName(FTAG);
+
         super.onResume();
         Bundle bundle = getIntent().getExtras();
         if(bundle != null) {
@@ -134,9 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPref.saveToSelectedToolIds(Constants.SELECTED_TOOL_IDS, toolIds);
                 SharedPref.saveLastCompletedToolIds(lastListing);
                 if (!completedToolsArray.contains(Integer.parseInt(toolIds.get(0)))) {
-                    completedToolsArray.add(Integer.parseInt(toolIds.get(0)));
-                    completedToolsArray.add(Integer.parseInt(toolIds.get(1)));
-                    completedToolsArray.add(Integer.parseInt(toolIds.get(2)));
+                    completedToolsArray.addAll(lastListing);
                 }
                 SharedPref.saveToCompletedToolIds(Constants.COMPLETED_TOOL_IDS,completedToolsArray);
                 toolSelectionType = bundle.getString("selection_type");
@@ -159,8 +168,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPostResume() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
+        displayProcedureName(FTAG);
+
         super.onPostResume();
         if (exerciseCompleted) {
             getSupportActionBar().setTitle(toolSelectionType);
@@ -169,8 +178,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void returnToToolsLayout() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
+        displayProcedureName(FTAG);
+
         toolsFragment.show_reselect_repeat_buttons = true;
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         TabLayout.Tab tab = tabLayout.getTabAt(Constants.TOOLS);
@@ -178,8 +187,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void addToCompletedTools() {
-        String nameofCurrMethod = new Throwable().getStackTrace()[0].getMethodName();
-        Log.i(this.getClass().getSimpleName(), nameofCurrMethod + "()");
+        displayProcedureName(FTAG);
+
         ArrayList<Integer> lastCompletedToolIds = SharedPref.getLastCompletedToolIds();
         SharedPref.saveToCompletedToolIds(Constants.COMPLETED_TOOL_IDS, lastCompletedToolIds);
     }

@@ -91,11 +91,11 @@ public class MusicSelectorActivity extends AppCompatActivity {
         }
    }
 
-//    @Override
-//    public boolean onSupportNavigateUp(){
-//        finish();
-//        return true;
-//    }
+    @Override
+    public boolean onSupportNavigateUp(){
+        finish();
+        return true;
+    }
 
     public static boolean isEmulator() {
         return Build.FINGERPRINT.startsWith("generic")

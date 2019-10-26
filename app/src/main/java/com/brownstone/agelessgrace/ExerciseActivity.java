@@ -52,7 +52,7 @@ import static com.brownstone.agelessgrace.BuildConfig.BUILD_TYPE;
 
 public class ExerciseActivity extends AppCompatActivity {
 
-    public static final String TAG = "ExerciseActivity";
+    public static final String TAG = "ExerciseActivity()";
     DateManager dataMgr;
 
     Integer totalExercisePeriod =  DAILY_EXERCISE_TIME;
@@ -138,14 +138,16 @@ public class ExerciseActivity extends AppCompatActivity {
         selectedMusic = MusicSelectorActivity.getData();
 
         scrollingText = findViewById(R.id.scrollingTextView);
-        bodyPartsText = (res.getStringArray(R.array.body_parts_to_move)[tool1Index]);
-        waysToMoveText = (res.getStringArray(R.array.ways_to_move_them)[tool1Index]);
+        String bpText = (res.getStringArray(R.array.body_parts_to_move)[tool1Index]);
+        bodyPartsText = bpText.replace("\n", "; ");
+        String wmText = (res.getStringArray(R.array.ways_to_move_them)[tool1Index]);
+        waysToMoveText = wmText.replace("\n", "; ");
         TextView tool1 = findViewById(R.id.tool1);
-        tool1.setText(res.getString(R.string.formatted_tool_title, tool1Index, (res.getStringArray(R.array.tools))[tool1Index - 1]));
+        tool1.setText(res.getString(R.string.formatted_tool_title, tool1Index + 1, (res.getStringArray(R.array.tools))[tool1Index]));
         TextView tool2 = findViewById(R.id.tool2);
-        tool2.setText(res.getString(R.string.formatted_tool_title, tool2Index, (res.getStringArray(R.array.tools))[tool2Index - 1]));
+        tool2.setText(res.getString(R.string.formatted_tool_title, tool2Index + 1, (res.getStringArray(R.array.tools))[tool2Index]));
         TextView tool3 = findViewById(R.id.tool3);
-        tool3.setText(res.getString(R.string.formatted_tool_title, tool3Index, (res.getStringArray(R.array.tools))[tool3Index - 1]));
+        tool3.setText(res.getString(R.string.formatted_tool_title, tool3Index + 1, (res.getStringArray(R.array.tools))[tool3Index]));
         songTitle = findViewById(R.id.song_title);
         currentIndex = 0;
         // Notes about exercise times
@@ -230,7 +232,6 @@ public class ExerciseActivity extends AppCompatActivity {
                                 break;
 
                         }
-//                        durationInt = Integer.parseInt((currentSelection.getDuration()));
                     }
                 }
                 timeRemaining.setText(formatSongTime(durationInt));
@@ -255,6 +256,18 @@ public class ExerciseActivity extends AppCompatActivity {
         return String.format("%d:%02d", minutes, seconds);
     }
 
+
+    @Override
+    public boolean onSupportNavigateUp(){
+        if (mp != null && mp.isPlaying()) {
+            mp.stop();
+            mp.release();
+            hourglass.stopTimer();
+        }
+        finish();
+        return true;
+    }
+
     void returnToMainActivity() {
         //need to set start and end dates if not set
         allCompleted = true;
@@ -272,7 +285,6 @@ public class ExerciseActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("selection_type", toolSelectionType);
         intent.putExtra("from_exercise", true);
-//        intent.putExtra("repeating", repeating);
         intent.putStringArrayListExtra("tool_id_nos", toolIds);
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
@@ -331,8 +343,10 @@ public class ExerciseActivity extends AppCompatActivity {
                 timeRemaining.setText(formatSongTime(durationInt));
                 tool2.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
                 toolName = tool2Name + " ";
-                bodyPartsText = (res.getStringArray(R.array.body_parts_to_move)[tool2Index - 1]);
-                waysToMoveText = (res.getStringArray(R.array.ways_to_move_them)[tool2Index - 1]);
+                String bpText = (res.getStringArray(R.array.body_parts_to_move)[tool2Index]);
+                bodyPartsText = bpText.replace("\n", "; ");
+                String wmText = (res.getStringArray(R.array.ways_to_move_them)[tool2Index]);
+                waysToMoveText = wmText.replace("\n", "; ");
                 break;
             case 2:
                 if (selectedMusic.size() > 0) {
@@ -353,8 +367,10 @@ public class ExerciseActivity extends AppCompatActivity {
                 timeRemaining.setText(formatSongTime(durationInt));
                 tool3.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
                 toolName = tool3Name + " ";
-                bodyPartsText = (res.getStringArray(R.array.body_parts_to_move)[tool3Index - 1]);
-                waysToMoveText = (res.getStringArray(R.array.ways_to_move_them)[tool3Index - 1]);
+                bpText = (res.getStringArray(R.array.body_parts_to_move)[tool3Index]);
+                bodyPartsText = bpText.replace("\n", "; ");
+                wmText = (res.getStringArray(R.array.ways_to_move_them)[tool3Index]);
+                waysToMoveText = wmText.replace("\n", "; ");
                 break;
             case 3:
                 ArrayList<String> selectedToolSets = SharedPref.getAllSelectedToolSets();
@@ -455,13 +471,13 @@ public class ExerciseActivity extends AppCompatActivity {
 
     public void playMusic() {
         Resources res = getResources();
-        String theTitle = (res.getStringArray(R.array.tools))[tool1Index - 1];//String.format(res.getString(R.string.tool_title),tool1Index);
+        String theTitle = (res.getStringArray(R.array.tools))[tool1Index];//String.format(res.getString(R.string.tool_title),tool1Index);
         switch (currentIndex) {
             case 1:
-                theTitle = (res.getStringArray(R.array.tools))[tool2Index - 1];//String.format(res.getString(R.string.tool_title),tool2Index);
+                theTitle = (res.getStringArray(R.array.tools))[tool2Index];//String.format(res.getString(R.string.tool_title),tool2Index);
                 break;
             case 2:
-                theTitle = (res.getStringArray(R.array.tools))[tool3Index - 1];//String.format(res.getString(R.string.tool_title),tool3Index);
+                theTitle = (res.getStringArray(R.array.tools))[tool3Index];//String.format(res.getString(R.string.tool_title),tool3Index);
                 break;
         }
         getSupportActionBar().setTitle(theTitle);
@@ -492,7 +508,6 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     public void resume() {
-//        hourglass.startTimer();
         if (mp != null) {
             mp.start();
             mp.seekTo(length);
