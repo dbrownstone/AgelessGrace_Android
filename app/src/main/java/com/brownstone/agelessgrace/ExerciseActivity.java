@@ -117,7 +117,7 @@ public class ExerciseActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (DEBUG) {
-            totalExercisePeriod = DAILY_EXERCISE_TIME / 10;
+            totalExercisePeriod = DAILY_EXERCISE_TIME;// / 10;
             individualToolPeriod = (totalExercisePeriod) / 3;
         }
 
@@ -162,12 +162,7 @@ public class ExerciseActivity extends AppCompatActivity {
             artist = findViewById(R.id.artist);
             artist.setText(firstSong.getArtist());
             durationInt = Integer.parseInt((firstSong.getDuration()));
-            if  (DEBUG) {
-                durationInt = individualToolPeriod;
-                restartExercise = false;
-            } else {
-                restartExercise = (durationInt < individualToolPeriod);
-            }
+            restartExercise = (durationInt < individualToolPeriod);
             timeRemaining = findViewById(R.id.song_time_remaining);
             timeRemaining.setText(formatSongTime(durationInt));
             recordCover = findViewById(R.id.imageView);
@@ -183,19 +178,22 @@ public class ExerciseActivity extends AppCompatActivity {
         totalTimeRemainingTV = findViewById(R.id.total_time_remaining);
         totalTimeRemainingTV.setText(formatSongTime(totalExercisePeriod));
 
-        final int interval = 1000;
+        final int minInterval = 1000;
         hourglass = new Hourglass(totalExercisePeriod) {
             @Override
             public void onTimerTick(long theRemainingTime) {
                 remainingTime = theRemainingTime;
                 totalTimeRemainingTV.setText(RemainingTimeString(remainingTime));
-                durationInt -= interval;
-                individualToolPeriod -= interval;
+                durationInt -= minInterval;
+                individualToolPeriod -= minInterval;
                 //if a tool has been completed
-                if (durationInt <= 0 || individualToolPeriod == 0) {
-                    if (individualToolPeriod == interval && restartExercise) {
+                if (durationInt <= 0 || individualToolPeriod <= minInterval) {
+                    if (durationInt <= 0 && individualToolPeriod > (minInterval * 15)) { //restartExercise) {
+                        // restart the same music to continue this exercise unless there
+                        // are less than 15 seconds remaining in this interval
                         changeTools(currentIndex);
                     } else {
+                        currentIndex+=1;
                         if (mp != null) {
                             mp.stop();
                             try {
@@ -206,11 +204,11 @@ public class ExerciseActivity extends AppCompatActivity {
                             }
                         }
                         individualToolPeriod = (totalExercisePeriod) / 3;
-                        currentIndex += 1;
                         if (currentIndex >= 3) {
                             if (currentIndex == 3) stopTimer();
                         } else {
                             changeTools(currentIndex);
+                            restartExercise = false;
                         }
                     }
                 } else {
@@ -324,6 +322,13 @@ public class ExerciseActivity extends AppCompatActivity {
             mp.release();
         }
         switch (nextTool) {
+            case 0:
+                mp = MediaPlayer.create(this, Uri.parse(firstSong.getFilePath()));
+                durationInt = Integer.parseInt((firstSong.getDuration()));
+                timeRemaining.setText(formatSongTime(durationInt));
+                restartExercise = true;
+                tool1.setTextColor(ContextCompat.getColor(this, R.color.colorAccent));
+                break;
             case 1:
                 if (selectedMusic.size() > 0) {
                     mp = MediaPlayer.create(this, Uri.parse(secondSong.getFilePath()));
@@ -331,12 +336,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     songTitle.setText(secondSong.getSongTitle());
                     artist.setText(secondSong.getArtist());
                     durationInt = Integer.parseInt((secondSong.getDuration()));
-                    if (DEBUG) {
-                        durationInt = individualToolPeriod;
-                        restartExercise = false;
-                    } else {
-                        restartExercise = (durationInt < individualToolPeriod);
-                    }
+                    restartExercise = (durationInt < individualToolPeriod);
                 } else {
                     durationInt = individualToolPeriod;
                 }
@@ -355,12 +355,7 @@ public class ExerciseActivity extends AppCompatActivity {
                     songTitle.setText(thirdSong.getSongTitle());
                     artist.setText(thirdSong.getArtist());
                     durationInt = Integer.parseInt((thirdSong.getDuration()));
-                    if (DEBUG) {
-                        durationInt = individualToolPeriod;
-                        restartExercise = false;
-                    } else {
-                        restartExercise = (durationInt < individualToolPeriod);
-                    }
+                    restartExercise = (durationInt < individualToolPeriod);
                 } else {
                     durationInt = individualToolPeriod;
                 }
@@ -397,7 +392,11 @@ public class ExerciseActivity extends AppCompatActivity {
             scrollingContent = res.getString(R.string.scrolling_content,toolName,bodyPartsText,waysToMoveText);
             scrollingText.setText(scrollingContent);
             scrollingText.setSelected(true);// starts the scroll
-            if (!restartExercise) nextToolSelected = true;
+            if (!restartExercise) {
+                nextToolSelected = true;
+            } else {
+                nextToolSelected = false;
+            }
             playMusic();
         }
     }
@@ -496,7 +495,6 @@ public class ExerciseActivity extends AppCompatActivity {
                 isPaused = !mp.isPlaying() && length > 1;
 
                 if (isPaused) return;
-
                 hourglass.startTimer();
                 mp.start();
             }
