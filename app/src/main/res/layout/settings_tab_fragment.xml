@@ -117,10 +117,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="8dp"
+                android:background="@drawable/bordered_text_view"
                 android:maxLines="2"
                 android:minLines="2"
                 android:text="@string/pauseInstruction"
-                android:background="@drawable/bordered_text_view"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp"
@@ -132,7 +132,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="91dp"
+                android:layout_height="115dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -180,10 +180,10 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginEnd="8dp"
+                android:background="@drawable/bordered_text_view"
                 android:maxLines="2"
                 android:minLines="2"
                 android:text="@string/start_exercise_session"
-                android:background="@drawable/bordered_text_view"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="24sp"
@@ -195,7 +195,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="115dp"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
@@ -259,7 +259,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="170dp"
                 android:orientation="vertical">
 
                 <Switch
@@ -271,12 +271,12 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
-                    android:maxLines="3"
-                    android:minLines="3"
                     android:checked="true"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
+                    android:maxLines="5"
+                    android:minLines="3"
                     android:text="@string/restart_the_music"
                     android:textColorLink="@color/AG_red"
                     android:textOff="@string/automatically"

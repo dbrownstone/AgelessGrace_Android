@@ -69,7 +69,7 @@
     <string name="button_press">upon button press</string>
     <string name="automatically">automatically</string>
     <string name="restart_title">Restart The Music</string>
-    <string name="restart_the_music">Restart the music at completion,\nif there are more than 15 seconds\nrequired to complete the exercise</string>
+    <string name="restart_the_music">Restart the music at completion, if there are more than 15 seconds required to complete the exercise</string>
     <string name="scrolling_content">           %s          Body Parts: - %s            Ways To Move: - %s></string>
 
     <string name="select_starting_date">Select Starting Date</string>
