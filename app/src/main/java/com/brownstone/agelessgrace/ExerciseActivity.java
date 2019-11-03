@@ -142,22 +142,13 @@ public class ExerciseActivity extends AppCompatActivity {
         }
 
         Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            toolSelectionType = bundle.getString("selectionType","");
-            if (bundle.containsKey("tool1Index")) {
-                tool1Index = bundle.getInt("tool1Index");
-            }
-            if (bundle.containsKey("tool2Index")) {
-                tool2Index = bundle.getInt("tool2Index");
-            }
-            if (bundle.containsKey("tool3Index")) {
-                tool3Index = bundle.getInt("tool3Index");
-            }
-            tool1Name = (res.getStringArray(R.array.tools))[tool1Index];
-            tool2Name = (res.getStringArray(R.array.tools))[tool2Index];
-            tool3Name = (res.getStringArray(R.array.tools))[tool3Index];
-        }
-
+        toolSelectionType = bundle.getString("selectionType");
+        tool1Index = bundle.getInt("tool1Index");
+        tool2Index = bundle.getInt("tool2Index");
+        tool3Index = bundle.getInt("tool3Index");
+        tool1Name = (res.getStringArray(R.array.tools))[tool1Index];
+        tool2Name = (res.getStringArray(R.array.tools))[tool2Index];
+        tool3Name = (res.getStringArray(R.array.tools))[tool3Index];
         selectedMusic = MusicSelectorActivity.getData();
 
         scrollingText = findViewById(R.id.scrollingTextView);
@@ -332,13 +323,12 @@ public class ExerciseActivity extends AppCompatActivity {
         tool2.setTextColor(ContextCompat.getColor(this,R.color.AG_blue));
         TextView tool3 = findViewById(R.id.tool3);
         tool3.setTextColor(ContextCompat.getColor(this,R.color.AG_blue));
-        String scrollingContent;
+        String scrollingContent = "";
         if (pauseBetweenTools) {
             pauseSong();
         }
         Resources res = getResources();
         String toolName = tool1Name + " ";
-
         switch (nextTool) {
             case 0:
                 mp = MediaPlayer.create(this, Uri.parse(firstSong.getFilePath()));
@@ -410,7 +400,11 @@ public class ExerciseActivity extends AppCompatActivity {
             scrollingContent = res.getString(R.string.scrolling_content,toolName,bodyPartsText,waysToMoveText);
             scrollingText.setText(scrollingContent);
             scrollingText.setSelected(true);// starts the scroll
-            nextToolSelected = !restartExercise;
+            if (!restartExercise) {
+                nextToolSelected = true;
+            } else {
+                nextToolSelected = false;
+            }
             playMusic();
         }
     }
@@ -493,9 +487,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 theTitle = (res.getStringArray(R.array.tools))[tool3Index];//String.format(res.getString(R.string.tool_title),tool3Index);
                 break;
         }
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(theTitle);
-        }
+        getSupportActionBar().setTitle(theTitle);
         if (nextToolSelected) {
             if (currentIndex < 3) {
                 if (mp != null) {
@@ -505,7 +497,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 }
             }
         } else {
-            Boolean isPaused;
+            Boolean isPaused = false;
 
             if (selectedMusic.size() > 0) {
                 isPaused = !mp.isPlaying() && length > 1;
@@ -543,7 +535,7 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     void showTheCongratulationsDialogs(String toolSelectionType) {
-        String message;
+        String message = "";
         if (toolSelectionType.equals(getString(R.string.seventh_day_title)) || toolSelectionType.equals(getString(R.string.exercise_title))) {
             message = getString(R.string.congrats_seven_day_completion);
         } else if (toolSelectionType.equals("21 Days")) {
