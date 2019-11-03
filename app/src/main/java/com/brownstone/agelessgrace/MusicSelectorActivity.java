@@ -160,10 +160,11 @@ public class MusicSelectorActivity extends AppCompatActivity {
                             selectedMusic.add(availableMusic.get(position));
                             selectedMusicLocations.add(position);
                         } else if (selectedMusic.contains(availableMusic.get(position))) {
+                            int index = selectedMusic.indexOf(availableMusic.get(position));
                             selectedMusic.remove(availableMusic.get(position));
-                            selectedMusicLocations.remove(position);
-                            showAcceptItem = false;
+                            selectedMusicLocations.remove(index);
                         }
+                        showAcceptItem = false;
                         if (selectedMusic.size() == 3) {
                             showAcceptItem = true;
                         }

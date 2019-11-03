@@ -25,6 +25,7 @@ final public class Constants {
     public static final String START_EXERCISE_IMMEDIATELY = "Start_exercise_automatically";
     public static final String PAUSE_BETWEEN_TOOLS = "Pause_between_tools";
     public static final String EXERCISE_DAILY = "ExerciseDaily";
+    public static final String RESTART_CURRENTLY_SELECTED_MUSIC = "Restart_music_item";
     public static final String STARTING_DATE = "StartingDate";
 
     public static final String END_OF_FIRST_WEEK = "EndOfFirstWeek";

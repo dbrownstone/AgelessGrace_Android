@@ -23,8 +23,8 @@ import java.util.Date;
 public class SettingsFragment extends Fragment {
 
     Boolean showSaveSettingsButton;
-    Switch freq_sw, pause_sw, exercise_start_sw;
-    TextView freq_result, pause_result, exercise_start_result, dateSelectorTitle;
+    Switch freq_sw, pause_sw, exercise_start_sw, restart_sw;
+    TextView freq_result, pause_result, exercise_start_result, restart_result, dateSelectorTitle;
     DatePicker datePicker;
 
     Calendar currentDate;
@@ -38,15 +38,16 @@ public class SettingsFragment extends Fragment {
         setHasOptionsMenu(true);
 
         showSaveSettingsButton = false;
-        if (!SharedPref.keyExists("StartingDate")) {
+        if (!SharedPref.keyExists(Constants.STARTING_DATE)) {
             showSaveSettingsButton =true;
             getActivity().invalidateOptionsMenu();
         }
-        datePicker = (DatePicker) view.findViewById(R.id.datePicker);
+        datePicker = view.findViewById(R.id.datePicker);
         dateSelectorTitle = view.findViewById(R.id.startingDateTitle);
+
         freq_sw = view.findViewById(R.id.exercise_frequency_sw);
-        if (SharedPref.keyExists("ExerciseDaily")) {
-            freq_sw.setChecked(SharedPref.read("ExerciseDaily", true));
+        if (SharedPref.keyExists(Constants.EXERCISE_DAILY)) {
+            freq_sw.setChecked(SharedPref.read(Constants.EXERCISE_DAILY, true));
             if (freq_sw.isChecked()) {
                 datePicker.setVisibility(View.VISIBLE);
                 dateSelectorTitle.setVisibility(View.VISIBLE);
@@ -55,6 +56,7 @@ public class SettingsFragment extends Fragment {
                 dateSelectorTitle.setVisibility(View.INVISIBLE);
             }
         }
+
         freq_result = view.findViewById(R.id.freq_result);
         freq_sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -72,11 +74,12 @@ public class SettingsFragment extends Fragment {
                 SharedPref.clearAllPreferences();
             }
         });
-        pause_sw = (Switch) view.findViewById(R.id.pause_sw);
-        if (SharedPref.keyExists("Pause_between_tools")) {
-            pause_sw.setChecked(SharedPref.read("Pause_between_tools", false));
+
+        pause_sw = view.findViewById(R.id.pause_sw);
+        if (SharedPref.keyExists(Constants.PAUSE_BETWEEN_TOOLS)) {
+            pause_sw.setChecked(SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false));
         }
-        pause_result = (TextView) view.findViewById(R.id.pause_result);
+        pause_result = view.findViewById(R.id.pause_result);
         pause_sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -89,11 +92,28 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        exercise_start_sw = (Switch) view.findViewById(R.id.exercise_start_sw);
+        restart_sw = view.findViewById(R.id.restart_sw);
+        if (SharedPref.keyExists(Constants.RESTART_CURRENTLY_SELECTED_MUSIC)) {
+            restart_sw.setChecked(SharedPref.read(Constants.RESTART_CURRENTLY_SELECTED_MUSIC, false));
+        }
+        restart_result = view.findViewById(R.id.restart_result);
+        restart_sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    restart_result.setText(getString(R.string.yes));
+                } else {
+                    restart_result.setText(getString(R.string.no));
+                }
+                showSaveSettingsButton = true;
+                getActivity().invalidateOptionsMenu();
+            }
+        });
+
+        exercise_start_sw = view.findViewById(R.id.exercise_start_sw);
         if (SharedPref.keyExists("Start_exercise_automatically")) {
             exercise_start_sw.setChecked(SharedPref.read("Start_exercise_automatically", false));
         }
-        exercise_start_result = (TextView) view.findViewById(R.id.exercise_start_result);
+        exercise_start_result = view.findViewById(R.id.exercise_start_result);
         exercise_start_sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -179,9 +199,10 @@ public class SettingsFragment extends Fragment {
     }
 
     public void saveSettings(Date theDate ) {
-        SharedPref.write("Pause_between_tools", pause_sw.isChecked());
-        SharedPref.write("ExerciseDaily", freq_sw.isChecked());
-        SharedPref.write("Start_exercise_automatically", exercise_start_sw.isChecked());
+        SharedPref.write(Constants.PAUSE_BETWEEN_TOOLS, pause_sw.isChecked());
+        SharedPref.write(Constants.EXERCISE_DAILY, freq_sw.isChecked());
+        SharedPref.write(Constants.START_EXERCISE_IMMEDIATELY, exercise_start_sw.isChecked());
+        SharedPref.write(Constants.RESTART_CURRENTLY_SELECTED_MUSIC,restart_sw.isChecked());
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         SharedPref.write("StartingDate", formatter.format(theDate));
         if (freq_sw.isChecked()) {

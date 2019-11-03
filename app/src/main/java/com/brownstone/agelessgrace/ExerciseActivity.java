@@ -81,6 +81,7 @@ public class ExerciseActivity extends AppCompatActivity {
     Boolean resumeMusic = false;
     Boolean nextToolSelected = false;
     Boolean pauseBetweenTools = true;
+    Boolean restartCurrentlySelectedMusic = true;
     Boolean allCompleted = false;
     TextView totalTimeRemainingTV;
     long remainingTime;
@@ -127,6 +128,12 @@ public class ExerciseActivity extends AppCompatActivity {
 
         startExerciseImmediately = SharedPref.read(Constants.START_EXERCISE_IMMEDIATELY, true);
         pauseBetweenTools = SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
+        if (SharedPref.keyExists(Constants.RESTART_CURRENTLY_SELECTED_MUSIC)) {
+            restartCurrentlySelectedMusic = SharedPref.read(Constants.RESTART_CURRENTLY_SELECTED_MUSIC, false);
+        } else {
+            restartCurrentlySelectedMusic = true;
+        }
+
         Bundle bundle = getIntent().getExtras();
         toolSelectionType = bundle.getString("selectionType");
         tool1Index = bundle.getInt("tool1Index");
@@ -162,7 +169,9 @@ public class ExerciseActivity extends AppCompatActivity {
             artist = findViewById(R.id.artist);
             artist.setText(firstSong.getArtist());
             durationInt = Integer.parseInt((firstSong.getDuration()));
-            restartExercise = (durationInt < individualToolPeriod);
+            if (durationInt < individualToolPeriod) {
+                restartExercise = restartCurrentlySelectedMusic;
+            };
             timeRemaining = findViewById(R.id.song_time_remaining);
             timeRemaining.setText(formatSongTime(durationInt));
             recordCover = findViewById(R.id.imageView);
@@ -186,9 +195,11 @@ public class ExerciseActivity extends AppCompatActivity {
                 totalTimeRemainingTV.setText(RemainingTimeString(remainingTime));
                 durationInt -= minInterval;
                 individualToolPeriod -= minInterval;
-                //if a tool has been completed
-                if (durationInt <= 0 || individualToolPeriod <= minInterval) {
-                    if (durationInt <= 0 && individualToolPeriod > (minInterval * 15)) { //restartExercise) {
+                timeRemaining.setText(formatSongTime(durationInt));
+                Log.i(TAG,String.format("remaining duration: %d min. interval: %d",durationInt, minInterval));
+                        //if a tool has been completed
+                if (durationInt <= minInterval|| individualToolPeriod <= minInterval) {
+                    if (restartCurrentlySelectedMusic && durationInt <= 0 && individualToolPeriod > (minInterval * 15)) { //restartExercise) {
                         // restart the same music to continue this exercise unless there
                         // are less than 15 seconds remaining in this interval
                         changeTools(currentIndex);
@@ -232,7 +243,6 @@ public class ExerciseActivity extends AppCompatActivity {
                         }
                     }
                 }
-                timeRemaining.setText(formatSongTime(durationInt));
             }
 
             @Override
@@ -317,10 +327,10 @@ public class ExerciseActivity extends AppCompatActivity {
         }
         Resources res = getResources();
         String toolName = tool1Name + " ";
-        if (nextTool < 3 && (mp != null && mp.isPlaying())) {
-            mp.stop();
-            mp.release();
-        }
+//        if (nextTool < 3 && (mp != null && mp.isPlaying())) {
+//            mp.stop();
+//            mp.release();
+//        }
         switch (nextTool) {
             case 0:
                 mp = MediaPlayer.create(this, Uri.parse(firstSong.getFilePath()));
