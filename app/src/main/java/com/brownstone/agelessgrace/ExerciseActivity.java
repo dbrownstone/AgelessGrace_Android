@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.os.ConfigurationCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -90,6 +91,7 @@ public class ExerciseActivity extends AppCompatActivity {
     TextView songTitle;
     TextView artist;
     TextView timeRemaining;
+    Locale currentLocale;
 
     Hourglass hourglass;
 
@@ -122,9 +124,14 @@ public class ExerciseActivity extends AppCompatActivity {
             individualToolPeriod = (totalExercisePeriod) / 3;
         }
 
+        currentLocale = ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0);
+
         Resources res = getResources();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.exercise_screen_title);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.exercise_screen_title);
+        }
+
 
         startExerciseImmediately = SharedPref.read(Constants.START_EXERCISE_IMMEDIATELY, true);
         pauseBetweenTools = SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
@@ -135,13 +142,22 @@ public class ExerciseActivity extends AppCompatActivity {
         }
 
         Bundle bundle = getIntent().getExtras();
-        toolSelectionType = bundle.getString("selectionType");
-        tool1Index = bundle.getInt("tool1Index");
-        tool2Index = bundle.getInt("tool2Index");
-        tool3Index = bundle.getInt("tool3Index");
-        tool1Name = (res.getStringArray(R.array.tools))[tool1Index];
-        tool2Name = (res.getStringArray(R.array.tools))[tool2Index];
-        tool3Name = (res.getStringArray(R.array.tools))[tool3Index];
+        if (bundle != null) {
+            toolSelectionType = bundle.getString("selectionType","");
+            if (bundle.containsKey("tool1Index")) {
+                tool1Index = bundle.getInt("tool1Index");
+            }
+            if (bundle.containsKey("tool2Index")) {
+                tool2Index = bundle.getInt("tool2Index");
+            }
+            if (bundle.containsKey("tool3Index")) {
+                tool3Index = bundle.getInt("tool3Index");
+            }
+            tool1Name = (res.getStringArray(R.array.tools))[tool1Index];
+            tool2Name = (res.getStringArray(R.array.tools))[tool2Index];
+            tool3Name = (res.getStringArray(R.array.tools))[tool3Index];
+        }
+
         selectedMusic = MusicSelectorActivity.getData();
 
         scrollingText = findViewById(R.id.scrollingTextView);
@@ -171,7 +187,7 @@ public class ExerciseActivity extends AppCompatActivity {
             durationInt = Integer.parseInt((firstSong.getDuration()));
             if (durationInt < individualToolPeriod) {
                 restartExercise = restartCurrentlySelectedMusic;
-            };
+            }
             timeRemaining = findViewById(R.id.song_time_remaining);
             timeRemaining.setText(formatSongTime(durationInt));
             recordCover = findViewById(R.id.imageView);
@@ -196,8 +212,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 durationInt -= minInterval;
                 individualToolPeriod -= minInterval;
                 timeRemaining.setText(formatSongTime(durationInt));
-                Log.i(TAG,String.format("remaining duration: %d min. interval: %d",durationInt, minInterval));
-                        //if a tool has been completed
+                //if a tool has been completed
                 if (durationInt <= minInterval|| individualToolPeriod <= minInterval) {
                     if (restartCurrentlySelectedMusic && durationInt <= 0 && individualToolPeriod > (minInterval * 15)) { //restartExercise) {
                         // restart the same music to continue this exercise unless there
@@ -215,11 +230,8 @@ public class ExerciseActivity extends AppCompatActivity {
                             }
                         }
                         individualToolPeriod = (totalExercisePeriod) / 3;
-                        if (currentIndex >= 3) {
-                            if (currentIndex == 3) stopTimer();
-                        } else {
-                            changeTools(currentIndex);
-                            restartExercise = false;
+                        if (currentIndex == 3) {
+                            stopTimer();
                         }
                     }
                 } else {
@@ -260,8 +272,7 @@ public class ExerciseActivity extends AppCompatActivity {
         if(minutes > 0) { //if we have minutes, then there might be some remainder seconds
             seconds = seconds % 60;//seconds can be between 0-60, so we use the % operator to get the remainder
         }
-
-        return String.format("%d:%02d", minutes, seconds);
+        return String.format(currentLocale,"%d:%02d", minutes, seconds);
     }
 
 
@@ -295,7 +306,7 @@ public class ExerciseActivity extends AppCompatActivity {
         intent.putExtra("from_exercise", true);
         intent.putStringArrayListExtra("tool_id_nos", toolIds);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd", currentLocale);
         String todaysDate = formatter.format(new Date());
         SharedPref.write(Constants.LAST_EXERCISE_DATE, todaysDate);
         intent.putStringArrayListExtra("tool_ids",toolIds);
@@ -321,16 +332,13 @@ public class ExerciseActivity extends AppCompatActivity {
         tool2.setTextColor(ContextCompat.getColor(this,R.color.AG_blue));
         TextView tool3 = findViewById(R.id.tool3);
         tool3.setTextColor(ContextCompat.getColor(this,R.color.AG_blue));
-        String scrollingContent = "";
+        String scrollingContent;
         if (pauseBetweenTools) {
             pauseSong();
         }
         Resources res = getResources();
         String toolName = tool1Name + " ";
-//        if (nextTool < 3 && (mp != null && mp.isPlaying())) {
-//            mp.stop();
-//            mp.release();
-//        }
+
         switch (nextTool) {
             case 0:
                 mp = MediaPlayer.create(this, Uri.parse(firstSong.getFilePath()));
@@ -402,11 +410,7 @@ public class ExerciseActivity extends AppCompatActivity {
             scrollingContent = res.getString(R.string.scrolling_content,toolName,bodyPartsText,waysToMoveText);
             scrollingText.setText(scrollingContent);
             scrollingText.setSelected(true);// starts the scroll
-            if (!restartExercise) {
-                nextToolSelected = true;
-            } else {
-                nextToolSelected = false;
-            }
+            nextToolSelected = !restartExercise;
             playMusic();
         }
     }
@@ -489,7 +493,9 @@ public class ExerciseActivity extends AppCompatActivity {
                 theTitle = (res.getStringArray(R.array.tools))[tool3Index];//String.format(res.getString(R.string.tool_title),tool3Index);
                 break;
         }
-        getSupportActionBar().setTitle(theTitle);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(theTitle);
+        }
         if (nextToolSelected) {
             if (currentIndex < 3) {
                 if (mp != null) {
@@ -499,7 +505,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 }
             }
         } else {
-            Boolean isPaused = false;
+            Boolean isPaused;
 
             if (selectedMusic.size() > 0) {
                 isPaused = !mp.isPlaying() && length > 1;
@@ -537,7 +543,7 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     void showTheCongratulationsDialogs(String toolSelectionType) {
-        String message = "";
+        String message;
         if (toolSelectionType.equals(getString(R.string.seventh_day_title)) || toolSelectionType.equals(getString(R.string.exercise_title))) {
             message = getString(R.string.congrats_seven_day_completion);
         } else if (toolSelectionType.equals("21 Days")) {
