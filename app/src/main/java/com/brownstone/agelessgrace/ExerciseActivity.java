@@ -119,11 +119,6 @@ public class ExerciseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_exercise);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        if (DEBUG) {
-            totalExercisePeriod = DAILY_EXERCISE_TIME;// / 10;
-            individualToolPeriod = (totalExercisePeriod) / 3;
-        }
-
         currentLocale = ConfigurationCompat.getLocales(getResources().getConfiguration()).get(0);
 
         Resources res = getResources();
@@ -142,13 +137,21 @@ public class ExerciseActivity extends AppCompatActivity {
         }
 
         Bundle bundle = getIntent().getExtras();
-        toolSelectionType = bundle.getString("selectionType");
-        tool1Index = bundle.getInt("tool1Index");
-        tool2Index = bundle.getInt("tool2Index");
-        tool3Index = bundle.getInt("tool3Index");
-        tool1Name = (res.getStringArray(R.array.tools))[tool1Index];
-        tool2Name = (res.getStringArray(R.array.tools))[tool2Index];
-        tool3Name = (res.getStringArray(R.array.tools))[tool3Index];
+        if (bundle != null) {
+            toolSelectionType = bundle.getString("selectionType","");
+            if (bundle.containsKey("tool1Index")) {
+                tool1Index = bundle.getInt("tool1Index");
+            }
+            if (bundle.containsKey("tool2Index")) {
+                tool2Index = bundle.getInt("tool2Index");
+            }
+            if (bundle.containsKey("tool3Index")) {
+                tool3Index = bundle.getInt("tool3Index");
+            }
+            tool1Name = (res.getStringArray(R.array.tools))[tool1Index];
+            tool2Name = (res.getStringArray(R.array.tools))[tool2Index];
+            tool3Name = (res.getStringArray(R.array.tools))[tool3Index];
+        }
         selectedMusic = MusicSelectorActivity.getData();
 
         scrollingText = findViewById(R.id.scrollingTextView);
@@ -205,9 +208,10 @@ public class ExerciseActivity extends AppCompatActivity {
                 timeRemaining.setText(formatSongTime(durationInt));
                 //if a tool has been completed
                 if (durationInt <= minInterval|| individualToolPeriod <= minInterval) {
-                    if (restartCurrentlySelectedMusic && durationInt <= 0 && individualToolPeriod > (minInterval * 15)) { //restartExercise) {
+                    if (restartCurrentlySelectedMusic && durationInt <= minInterval && individualToolPeriod > (minInterval * 15)) { //restartExercise) {
                         // restart the same music to continue this exercise unless there
                         // are less than 15 seconds remaining in this interval
+                        mp.stop();
                         changeTools(currentIndex);
                     } else {
                         currentIndex+=1;
@@ -323,7 +327,7 @@ public class ExerciseActivity extends AppCompatActivity {
         tool2.setTextColor(ContextCompat.getColor(this,R.color.AG_blue));
         TextView tool3 = findViewById(R.id.tool3);
         tool3.setTextColor(ContextCompat.getColor(this,R.color.AG_blue));
-        String scrollingContent = "";
+        String scrollingContent;
         if (pauseBetweenTools) {
             pauseSong();
         }
@@ -400,11 +404,7 @@ public class ExerciseActivity extends AppCompatActivity {
             scrollingContent = res.getString(R.string.scrolling_content,toolName,bodyPartsText,waysToMoveText);
             scrollingText.setText(scrollingContent);
             scrollingText.setSelected(true);// starts the scroll
-            if (!restartExercise) {
-                nextToolSelected = true;
-            } else {
-                nextToolSelected = false;
-            }
+            nextToolSelected = !restartExercise;
             playMusic();
         }
     }
@@ -487,7 +487,9 @@ public class ExerciseActivity extends AppCompatActivity {
                 theTitle = (res.getStringArray(R.array.tools))[tool3Index];//String.format(res.getString(R.string.tool_title),tool3Index);
                 break;
         }
-        getSupportActionBar().setTitle(theTitle);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(theTitle);
+        }
         if (nextToolSelected) {
             if (currentIndex < 3) {
                 if (mp != null) {
@@ -497,7 +499,7 @@ public class ExerciseActivity extends AppCompatActivity {
                 }
             }
         } else {
-            Boolean isPaused = false;
+            Boolean isPaused;
 
             if (selectedMusic.size() > 0) {
                 isPaused = !mp.isPlaying() && length > 1;
@@ -535,7 +537,7 @@ public class ExerciseActivity extends AppCompatActivity {
     }
 
     void showTheCongratulationsDialogs(String toolSelectionType) {
-        String message = "";
+        String message;
         if (toolSelectionType.equals(getString(R.string.seventh_day_title)) || toolSelectionType.equals(getString(R.string.exercise_title))) {
             message = getString(R.string.congrats_seven_day_completion);
         } else if (toolSelectionType.equals("21 Days")) {
