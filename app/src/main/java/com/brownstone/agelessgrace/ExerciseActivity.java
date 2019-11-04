@@ -208,9 +208,9 @@ public class ExerciseActivity extends AppCompatActivity {
                 timeRemaining.setText(formatSongTime(durationInt));
                 //if a tool has been completed
                 if (durationInt <= minInterval|| individualToolPeriod <= minInterval) {
-                    if (restartCurrentlySelectedMusic && durationInt <= minInterval && individualToolPeriod > (minInterval * 15)) { //restartExercise) {
+                    if (restartCurrentlySelectedMusic && durationInt <= minInterval && individualToolPeriod > (minInterval * 30)) { //restartExercise) {
                         // restart the same music to continue this exercise unless there
-                        // are less than 15 seconds remaining in this interval
+                        // are less than 30 seconds remaining in this interval
                         mp.stop();
                         changeTools(currentIndex);
                     } else {
