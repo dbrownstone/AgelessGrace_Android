@@ -88,27 +88,6 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        if (SharedPref.keyExists(Constants.PAUSE_BETWEEN_TOOLS)) {
-            Boolean shouldPause = SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
-            pause_sw.setChecked(shouldPause);
-            if (shouldPause) {
-                pause_result.setText(getString(R.string.yes));
-            } else {
-                pause_result.setText(getString(R.string.no));
-            }
-        }
-        pause_sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    pause_result.setText(getString(R.string.yes));
-                } else {
-                    pause_result.setText(getString(R.string.no));
-                }
-                showSaveSettingsButton = true;
-                getActivity().invalidateOptionsMenu();
-            }
-        });
-
         if (SharedPref.keyExists(Constants.RESTART_CURRENTLY_SELECTED_MUSIC)) {
             Boolean restart = SharedPref.read(Constants.RESTART_CURRENTLY_SELECTED_MUSIC, false);
             restart_sw.setChecked(restart);
@@ -144,6 +123,30 @@ public class SettingsFragment extends Fragment {
                 getActivity().invalidateOptionsMenu();
             }
         });
+
+        if (SharedPref.keyExists(Constants.PAUSE_BETWEEN_TOOLS)) {
+            Boolean shouldPause = SharedPref.read(Constants.PAUSE_BETWEEN_TOOLS, false);
+            pause_sw.setChecked(shouldPause);
+            if (shouldPause) {
+                pause_result.setText(getString(R.string.yes));
+                exercise_start_sw.setChecked(false);
+            } else {
+                pause_result.setText(getString(R.string.no));
+            }
+        }
+        pause_sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    pause_result.setText(getString(R.string.yes));
+                    exercise_start_sw.setChecked(false);
+                } else {
+                    pause_result.setText(getString(R.string.no));
+                }
+                showSaveSettingsButton = true;
+                getActivity().invalidateOptionsMenu();
+            }
+        });
+
         SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyyMMdd");
         String startDate = DateManager.getStartingDate();
         Calendar currentDate = Calendar.getInstance();
